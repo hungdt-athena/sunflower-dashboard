@@ -66,6 +66,10 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
+// ─── Cron Job auto pull from n8n ────────────────────────
+const { startCronJob } = require('./cron');
+startCronJob();
+
 // ─── Start ──────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  🌻 Sunflower Dashboard Backend`);
