@@ -15,7 +15,7 @@ const Palette = {
   },
 
   theme: {
-    isDark() { return document.body.classList.contains('dark-mode'); },
+    isDark() { return document.documentElement.classList.contains('dark'); },
     text() { return this.isDark() ? '#f8fafc' : '#0f172a'; },
     muted() { return this.isDark() ? '#475569' : '#cbd5e1'; },
     grid() { return this.isDark() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'; },

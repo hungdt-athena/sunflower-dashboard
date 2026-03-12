@@ -42,7 +42,7 @@ window.appData = {
 
     // Theme toggle
     document.getElementById('btn-theme').addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
+      document.documentElement.classList.toggle('dark');
       updateChartTheme();
     });
 

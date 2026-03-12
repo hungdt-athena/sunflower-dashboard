@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Analytics Pro - Security Overview</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff8c00",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#231a0f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 140, 0, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 border-r border-primary/10 flex flex-col h-screen bg-background-light dark:bg-background-dark">
+        <div class="p-6 flex items-center gap-3">
+            <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-background-dark">
+                <span class="material-symbols-outlined font-bold">analytics</span>
+            </div>
+            <div class="flex flex-col">
+                <h1 class="text-slate-900 dark:text-slate-100 text-base font-bold leading-none">Analytics Pro</h1>
+                <p class="text-primary text-xs font-medium">Enterprise Dashboard</p>
+            </div>
+        </div>
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <div
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
+                <span class="material-symbols-outlined">dashboard</span>
+                <p class="text-sm font-semibold">Overview</p>
+            </div>
+            <div
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 transition-colors cursor-pointer group">
+                <span class="material-symbols-outlined group-hover:text-primary">bar_chart</span>
+                <p class="text-sm font-medium group-hover:text-primary">Analysis</p>
+            </div>
+            <div
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 transition-colors cursor-pointer group">
+                <span class="material-symbols-outlined group-hover:text-primary">shield_with_heart</span>
+                <p class="text-sm font-medium group-hover:text-primary">Teams &amp; Risk</p>
+            </div>
+        </nav>
+        <div class="p-4 border-t border-primary/10 space-y-2">
+            <div
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 cursor-pointer">
+                <span class="material-symbols-outlined">settings</span>
+                <p class="text-sm font-medium">Settings</p>
+            </div>
+            <div
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 cursor-pointer">
+                <span class="material-symbols-outlined">logout</span>
+                <p class="text-sm font-medium">Logout</p>
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <!-- Header -->
+        <header
+            class="h-16 border-b border-primary/10 flex items-center justify-between px-8 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-md">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary">security</span>
+                <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Security Overview</h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="relative hidden md:block">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+                    <input
+                        class="bg-primary/5 border border-primary/10 rounded-lg pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary outline-none text-slate-100 w-64"
+                        placeholder="Search insights..." type="text" />
+                </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="size-9 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-slate-400 hover:text-primary">
+                        <span class="material-symbols-outlined text-[20px]">notifications</span>
+                    </button>
+                    <div class="h-8 w-[1px] bg-primary/10 mx-1"></div>
+                    <div class="flex items-center gap-3 pl-2">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-xs font-bold text-slate-100 leading-none">Alex Rivera</p>
+                            <p class="text-[10px] text-primary font-medium">Lead Analyst</p>
+                        </div>
+                        <img class="size-9 rounded-full border border-primary/20 object-cover"
+                            data-alt="User profile avatar portrait"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrCNJ4JJmx94NFRrPTR1s-nxLqm8_kv8DlHYZWRGIBgTcEfP43rECftRZd4P0Oz8Ap26mbfL1MbvNOg9COxgV6HGHR5_oJMAvTA5HFe5BJ-4qTXn79Qsu3NSVnwv6ErJksNd8Zi3FBpAk1zH_twUpxDxDZtDdJDObjZUMcP8dOBuHAnGqY3QPDhzB9fgxgZyDEwzwufjKPNLKAQR6xg9yF00rhtEpi8oqYI8SUdZOae2fcMOauk5bl3thdEBDYrXgR-kMn6guntyQ" />
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Scrollable Dashboard Content -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-8 bg-background-light dark:bg-background-dark">
+            <!-- Metric Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                <div class="bg-primary/5 border border-primary/10 p-5 rounded-xl">
+                    <p class="text-slate-400 text-sm font-medium">Reviewed</p>
+                    <div class="flex items-end justify-between mt-2">
+                        <p class="text-2xl font-bold text-slate-100">12,405</p>
+                        <span class="text-emerald-500 text-xs font-bold mb-1">+12%</span>
+                    </div>
+                </div>
+                <div class="bg-primary/5 border border-primary/10 p-5 rounded-xl">
+                    <p class="text-slate-400 text-sm font-medium">Unconfirmed</p>
+                    <div class="flex items-end justify-between mt-2">
+                        <p class="text-2xl font-bold text-slate-100">3,210</p>
+                        <span class="text-emerald-500 text-xs font-bold mb-1">+5%</span>
+                    </div>
+                </div>
+                <div class="bg-primary/5 border border-primary/10 p-5 rounded-xl">
+                    <p class="text-slate-400 text-sm font-medium">Unreviewed</p>
+                    <div class="flex items-end justify-between mt-2">
+                        <p class="text-2xl font-bold text-slate-100">854</p>
+                        <span class="text-rose-500 text-xs font-bold mb-1">-2%</span>
+                    </div>
+                </div>
+                <div class="bg-primary/5 border border-primary/10 p-5 rounded-xl">
+                    <p class="text-slate-400 text-sm font-medium">Total Raw Logged</p>
+                    <div class="flex items-end justify-between mt-2">
+                        <p class="text-2xl font-bold text-slate-100">45,201</p>
+                        <span class="text-emerald-500 text-xs font-bold mb-1">+18%</span>
+                    </div>
+                </div>
+                <div class="bg-primary/5 border border-primary/10 p-5 rounded-xl border-rose-500/20">
+                    <p class="text-slate-400 text-sm font-medium">SLA Breach</p>
+                    <div class="flex items-end justify-between mt-2">
+                        <p class="text-2xl font-bold text-slate-100">12</p>
+                        <span class="text-rose-500 text-xs font-bold mb-1">-5%</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Health Summary Section -->
+            <div class="mb-8">
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-4">Health Summary</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- System Health Trend -->
+                    <div class="bg-primary/5 border border-primary/10 p-6 rounded-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-slate-400 text-sm font-medium">System Health Trend</p>
+                                <h4 class="text-3xl font-bold text-slate-100 mt-1">98.2%</h4>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-slate-500 text-xs">Last 30 days</span>
+                                    <span class="text-emerald-500 text-xs font-bold">+0.5%</span>
+                                </div>
+                            </div>
+                            <span
+                                class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">show_chart</span>
+                        </div>
+                        <div class="h-40 w-full relative">
+                            <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 478 150">
+                                <defs>
+                                    <lineargradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:rgba(255,140,0,0.2);stop-opacity:1"></stop>
+                                        <stop offset="100%" style="stop-color:rgba(255,140,0,0);stop-opacity:0"></stop>
+                                    </lineargradient>
+                                </defs>
+                                <path
+                                    d="M0 109C18.15 109 18.15 21 36.3 21C54.46 21 54.46 41 72.6 41C90.7 41 90.7 93 108.9 93C127 93 127 33 145.2 33C163.3 33 163.3 101 181.5 101C199.6 101 199.6 61 217.8 61C236 61 236 45 254.1 45C272.3 45 272.3 121 290.4 121C308.6 121 308.6 149 326.7 149C344.9 149 344.9 1 363 1C381.2 1 381.2 81 399.3 81C417.5 81 417.5 129 435.6 129C453.8 129 453.8 25 472 25V150H0V109Z"
+                                    fill="url(#gradient)"></path>
+                                <path
+                                    d="M0 109C18.15 109 18.15 21 36.3 21C54.46 21 54.46 41 72.6 41C90.7 41 90.7 93 108.9 93C127 93 127 33 145.2 33C163.3 33 163.3 101 181.5 101C199.6 101 199.6 61 217.8 61C236 61 236 45 254.1 45C272.3 45 272.3 121 290.4 121C308.6 121 308.6 149 326.7 149C344.9 149 344.9 1 363 1C381.2 1 381.2 81 399.3 81C417.5 81 417.5 129 435.6 129C453.8 129 453.8 25 472 25"
+                                    fill="none" stroke="#ff8c00" stroke-width="2"></path>
+                            </svg>
+                            <div class="flex justify-between mt-4">
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Mon</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Tue</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Wed</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Thu</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Fri</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Sat</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Resource Allocation -->
+                    <div class="bg-primary/5 border border-primary/10 p-6 rounded-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-slate-400 text-sm font-medium">Resource Allocation</p>
+                                <h4 class="text-3xl font-bold text-slate-100 mt-1">84%</h4>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-slate-500 text-xs">Current Quarter</span>
+                                    <span class="text-rose-500 text-xs font-bold">-1.2%</span>
+                                </div>
+                            </div>
+                            <span
+                                class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">database</span>
+                        </div>
+                        <div class="h-40 w-full flex items-end gap-6 px-4">
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full bg-primary/20 rounded-t-sm border-t-2 border-primary/40"
+                                    style="height: 20%;"></div>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Q1</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full bg-primary/20 rounded-t-sm border-t-2 border-primary/40"
+                                    style="height: 70%;"></div>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Q2</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full bg-primary/20 rounded-t-sm border-t-2 border-primary/40"
+                                    style="height: 40%;"></div>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Q3</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full bg-primary rounded-t-sm border-t-2 border-primary shadow-[0_0_15px_rgba(255,140,0,0.3)]"
+                                    style="height: 80%;"></div>
+                                <span class="text-[10px] text-slate-100 font-bold uppercase">Q4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Activity Feed -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Recent Activity</h3>
+                    <button class="text-primary text-sm font-semibold hover:underline">View all</button>
+                </div>
+                <div class="space-y-3">
+                    <div class="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="size-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                <span class="material-symbols-outlined">check_circle</span>
+                            </div>
+                            <div>
+                                <p class="text-slate-100 text-sm font-semibold">Firewall Rules Updated</p>
+                                <p class="text-slate-400 text-xs">Rule set #421 deployment successful across 12 nodes
+                                </p>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 text-xs font-medium">2 mins ago</span>
+                    </div>
+                    <div class="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="size-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+                                <span class="material-symbols-outlined">warning</span>
+                            </div>
+                            <div>
+                                <p class="text-slate-100 text-sm font-semibold">High Resource Usage</p>
+                                <p class="text-slate-400 text-xs">Cluster 'Alpha-7' exceeding 85% CPU threshold</p>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 text-xs font-medium">15 mins ago</span>
+                    </div>
+                    <div class="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="size-10 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500">
+                                <span class="material-symbols-outlined">cancel</span>
+                            </div>
+                            <div>
+                                <p class="text-slate-100 text-sm font-semibold">SLA Breach Warning</p>
+                                <p class="text-slate-400 text-xs">Response time for 'Authentication Service' below
+                                    target</p>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 text-xs font-medium">42 mins ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
