@@ -33,10 +33,35 @@ window.appData = {
     // Time Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('active', 'bg-white', 'text-slate-900', 'dark:bg-primary/10', 'dark:text-primary', 'border', 'border-slate-200', 'dark:border-primary/30', 'shadow-sm', 'font-bold');
+          b.classList.add('font-semibold');
+        });
+        
+        e.target.classList.remove('font-semibold');
+        e.target.classList.add('active', 'bg-white', 'text-slate-900', 'dark:bg-primary/10', 'dark:text-primary', 'border', 'border-slate-200', 'dark:border-primary/30', 'shadow-sm', 'font-bold');
+        
         this.state.range = e.target.dataset.range;
         this.renderAll();
+      });
+    });
+
+    // Navigation Tabs
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const inactiveClasses = ['text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'dark:hover:text-slate-200', 'border-transparent'];
+        const activeClasses = ['active', 'text-primary', 'border-primary'];
+
+        document.querySelectorAll('.nav-tab-btn').forEach(b => {
+          b.classList.remove(...activeClasses);
+          b.classList.add(...inactiveClasses);
+        });
+        
+        e.target.classList.remove(...inactiveClasses);
+        e.target.classList.add(...activeClasses);
+        
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+        document.getElementById(e.target.dataset.tab).classList.remove('hidden');
       });
     });
 

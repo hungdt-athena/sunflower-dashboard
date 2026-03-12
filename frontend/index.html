@@ -143,7 +143,7 @@
   </aside>
 
   <!-- Main Content Area -->
-  <main class="flex-1 flex flex-col h-screen overflow-hidden">
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-background-light dark:bg-background-dark">
     <!-- Header -->
     <header class="h-16 border-b border-slate-200 dark:border-primary/10 flex items-center justify-between px-8 bg-white/80 dark:bg-background-dark/80 backdrop-blur-xl shrink-0 z-10 shadow-sm">
         <div class="flex items-center gap-3">
@@ -182,264 +182,284 @@
         </div>
     </header>
 
-    <!-- Scrollable Content -->
-    <div class="flex-1 overflow-y-auto custom-scrollbar p-8 bg-background-light dark:bg-background-dark pb-24 space-y-8">
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-200 dark:border-primary/10 px-8 pt-4 shrink-0 bg-white dark:bg-background-dark/50">
+      <button class="nav-tab-btn active px-4 py-3 text-sm font-bold text-primary border-b-2 border-primary transition-colors" data-tab="tab-kpis">
+        KPIs & Activity
+      </button>
+      <button class="nav-tab-btn px-4 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-b-2 border-transparent transition-colors" data-tab="tab-health">
+        Health & Risk
+      </button>
+      <button class="nav-tab-btn px-4 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-b-2 border-transparent transition-colors" data-tab="tab-charts">
+        Trend Charts
+      </button>
+    </div>
+
+    <!-- Scrollable Tab Content Container -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-8 pb-24">
       
-      <!-- KPI Row -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="reviewed">
-              <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div class="flex justify-between items-start mb-2">
-                  <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Reviewed</p>
-                  <span class="material-symbols-outlined text-emerald-500 text-[18px]">check_circle</span>
-              </div>
-              <div class="flex items-end justify-between mt-3">
-                  <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-green" id="stat-reviewed">-</p>
-                  <div class="text-right flex flex-col items-end gap-1 mb-1">
-                    <p class="text-[10px] text-slate-400 font-bold tracking-wide">Rate: <span id="stat-rereview-rate" class="text-slate-600 dark:text-slate-300">0%</span></p>
-                    <span id="stat-rereviewed" class="badge bg-secondary">0 re-rev</span>
-                  </div>
-              </div>
-          </div>
-          
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="needConfirm">
-              <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div class="flex justify-between items-start mb-2">
-                  <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Unconfirmed</p>
-                  <span class="material-symbols-outlined text-rose-500 text-[18px]">error</span>
-              </div>
-              <div class="flex items-end justify-between mt-3">
-                  <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-red" id="stat-need-confirm">-</p>
-                  <span class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80">Pending</span>
-              </div>
-          </div>
-
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="unreviewed">
-              <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div class="flex justify-between items-start mb-2">
-                  <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Unreviewed</p>
-                  <span class="material-symbols-outlined text-amber-500 text-[18px]">pending_actions</span>
-              </div>
-              <div class="flex items-end justify-between mt-3">
-                  <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-amber" id="stat-unreviewed">-</p>
-                  <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-1 opacity-80">In Queue</span>
-              </div>
-          </div>
-
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="total">
-              <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div class="flex justify-between items-start mb-2">
-                  <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Total Raw</p>
-                  <span class="material-symbols-outlined text-blue-500 text-[18px]">list_alt</span>
-              </div>
-              <div class="flex items-end justify-between mt-3">
-                  <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-total">-</p>
-                  <div class="text-right flex flex-col items-end gap-1.5 mb-1">
-                    <span id="stat-rawdup" class="badge bg-secondary">0 dup</span>
-                    <span id="stat-tagmismatch" class="badge bg-amber hidden">0 mismatches</span>
-                  </div>
-              </div>
-          </div>
-
-          <div class="bg-rose-50/50 dark:bg-primary/5 border border-rose-200 dark:border-rose-500/20 p-5 rounded-xl shadow-sm hover:border-rose-400 dark:hover:border-rose-500/50 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="slabreach">
-              <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div class="flex justify-between items-start mb-2">
-                  <p class="text-rose-700 dark:text-rose-400/80 text-xs font-bold uppercase tracking-wider">SLA Breach</p>
-                  <span class="material-symbols-outlined text-rose-500 text-[18px]">timer_off</span>
-              </div>
-              <div class="flex items-end justify-between mt-3">
-                  <p class="text-3xl font-bold text-rose-600 dark:text-rose-500" id="stat-sla-pct">-%</p>
-                  <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80"><span id="stat-sla-count">0</span> Items</p>
-              </div>
-          </div>
-      </div>
-
-      <!-- Time Stats Row -->
-      <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 overflow-hidden relative">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 dark:via-primary/[0.02] to-transparent pointer-events-none"></div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-primary/10 relative z-10">
-          <div class="flex flex-col items-center justify-center p-2">
-            <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review</p>
-            <p class="text-4xl font-bold text-slate-800 dark:text-slate-100" id="stat-avg-hours">-</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-2">
-            <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review</p>
-            <p class="text-4xl font-bold text-slate-800 dark:text-slate-100" id="stat-median-hours">-</p>
-          </div>
-          <div class="flex flex-col items-center justify-center p-2">
-            <p class="text-primary/70 dark:text-primary/80 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">speed</span> Velocity</p>
-            <div class="flex items-baseline gap-1.5">
-              <p class="text-4xl font-bold text-primary" id="stat-velocity">-</p>
-              <span class="text-slate-400 font-bold text-xs uppercase tracking-wider">rev/d</span>
+      <!-- TAB 1: KPIs & Activity -->
+      <div id="tab-kpis" class="tab-pane space-y-8">
+        <!-- KPI Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="total">
+                <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Total Meeting</p>
+                    <span class="material-symbols-outlined text-blue-500 text-[18px]">list_alt</span>
+                </div>
+                <div class="flex items-end justify-between mt-3">
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-total">-</p>
+                    <div class="text-right flex flex-col items-end gap-1.5 mb-1">
+                      <span id="stat-rawdup" class="badge bg-secondary">0 dup</span>
+                      <span id="stat-tagmismatch" class="badge bg-amber hidden">0 mismatches</span>
+                    </div>
+                </div>
             </div>
-            <div class="mt-2 text-[11px] font-bold uppercase tracking-wider" id="stat-velocity-trend">...</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Health & Risk -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        <!-- Health Summary -->
-        <div class="flex flex-col">
-          <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold mb-4 flex items-center gap-2">
-            <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
-            Health Parameters
-          </h3>
-          <div id="health-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-            <div class="loading text-slate-500 text-sm col-span-2">Loading health parameters...</div>
-          </div>
-        </div>
+            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="reviewed">
+                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Reviewed</p>
+                    <span class="material-symbols-outlined text-emerald-500 text-[18px]">check_circle</span>
+                </div>
+                <div class="flex items-end justify-between mt-3">
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-green" id="stat-reviewed">-</p>
+                    <div class="text-right flex flex-col items-end gap-1 mb-1">
+                      <p class="text-[10px] text-slate-400 font-bold tracking-wide">Rate: <span id="stat-rereview-rate" class="text-slate-600 dark:text-slate-300">0%</span></p>
+                      <span id="stat-rereviewed" class="badge bg-secondary">0 re-rev</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="needConfirm">
+                <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Unconfirmed</p>
+                    <span class="material-symbols-outlined text-rose-500 text-[18px]">error</span>
+                </div>
+                <div class="flex items-end justify-between mt-3">
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-red" id="stat-need-confirm">-</p>
+                    <span class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80">Pending</span>
+                </div>
+            </div>
 
-        <!-- Risk Teams Table -->
-        <div class="flex flex-col h-[350px]">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
-              <span class="material-symbols-outlined text-rose-500 text-[20px]">warning</span>
-              Top Risk Teams
-            </h3>
-            <button class="text-primary text-xs font-bold hover:underline" onclick="document.getElementById('weights-modal').showModal()">Tweak Weights</button>
-          </div>
-          <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
-            <table class="data-table">
-              <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
-                <tr><th>Team</th><th>Score</th><th style="width: 50%">Intensity</th></tr>
-              </thead>
-              <tbody id="risk-tbody">
-                <tr><td colspan="3" class="text-center text-slate-500 text-sm italic">Loading risk scores...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="unreviewed">
+                <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Unreviewed</p>
+                    <span class="material-symbols-outlined text-amber-500 text-[18px]">pending_actions</span>
+                </div>
+                <div class="flex items-end justify-between mt-3">
+                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-amber" id="stat-unreviewed">-</p>
+                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-1 opacity-80">In Queue</span>
+                </div>
+            </div>
 
-      <!-- Pending Lists -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Unreviewed -->
-        <div class="flex flex-col h-[320px]">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
-              <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
-              Unreviewed Queue
-            </h3>
-            <span class="badge bg-amber">Confirmed</span>
-          </div>
-          <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
-            <table class="data-table compact">
-              <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
-                <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
-              </thead>
-              <tbody id="pending-unreviewed-tbody"></tbody>
-            </table>
-          </div>
+            <div class="bg-rose-50/50 dark:bg-primary/5 border border-rose-200 dark:border-rose-500/20 p-5 rounded-xl shadow-sm hover:border-rose-400 dark:hover:border-rose-500/50 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="slabreach">
+                <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-rose-700 dark:text-rose-400/80 text-xs font-bold uppercase tracking-wider">SLA Breach</p>
+                    <span class="material-symbols-outlined text-rose-500 text-[18px]">timer_off</span>
+                </div>
+                <div class="flex items-end justify-between mt-3">
+                    <p class="text-3xl font-bold text-rose-600 dark:text-rose-500" id="stat-sla-pct">-%</p>
+                    <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80"><span id="stat-sla-count">0</span> Items</p>
+                </div>
+            </div>
         </div>
 
-        <!-- Unconfirmed -->
-        <div class="flex flex-col h-[320px]">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
-              <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
-              Unconfirmed Actions
-            </h3>
-            <span class="badge bg-red">Raw</span>
-          </div>
-          <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
-            <table class="data-table compact">
-              <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
-                <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
-              </thead>
-              <tbody id="pending-unconfirmed-tbody"></tbody>
-            </table>
+        <!-- Time Stats Row -->
+        <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 dark:via-primary/[0.02] to-transparent pointer-events-none"></div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-primary/10 relative z-10">
+            <div class="flex flex-col items-center justify-center p-2">
+              <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review</p>
+              <p class="text-4xl font-bold text-slate-800 dark:text-slate-100" id="stat-avg-hours">-</p>
+            </div>
+            <div class="flex flex-col items-center justify-center p-2">
+              <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review</p>
+              <p class="text-4xl font-bold text-slate-800 dark:text-slate-100" id="stat-median-hours">-</p>
+            </div>
+            <div class="flex flex-col items-center justify-center p-2">
+              <p class="text-primary/70 dark:text-primary/80 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">speed</span> Velocity</p>
+              <div class="flex items-baseline gap-1.5">
+                <p class="text-4xl font-bold text-primary" id="stat-velocity">-</p>
+                <span class="text-slate-400 font-bold text-xs uppercase tracking-wider">rev/d</span>
+              </div>
+              <div class="mt-2 text-[11px] font-bold uppercase tracking-wider" id="stat-velocity-trend">...</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Funnel & Leaderboard -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        <!-- Funnel -->
-        <div class="flex flex-col">
-           <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold mb-4 flex items-center gap-2">
-              <span class="material-symbols-outlined text-blue-500 text-[20px]">filter_alt</span>
-              Conversion Funnel
-           </h3>
-           <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">
-              <div class="flex items-center">
-                <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Raw Logged</div>
-                <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
-                  <div id="funnel-raw-bar" class="h-full bg-blue-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 100%">
-                    <span id="funnel-raw-count">-</span><span class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(100%)</span>
+        <!-- Pending Lists -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Unreviewed -->
+          <div class="flex flex-col h-[320px]">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
+                Unreviewed Queue
+              </h3>
+              <span class="badge bg-amber">Confirmed</span>
+            </div>
+            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+              <table class="data-table compact">
+                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                  <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
+                </thead>
+                <tbody id="pending-unreviewed-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Unconfirmed -->
+          <div class="flex flex-col h-[320px]">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
+                Unconfirmed Actions
+              </h3>
+              <span class="badge bg-red">Raw</span>
+            </div>
+            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+              <table class="data-table compact">
+                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                  <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
+                </thead>
+                <tbody id="pending-unconfirmed-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Funnel & Leaderboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Funnel -->
+          <div class="flex flex-col">
+             <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-blue-500 text-[20px]">filter_alt</span>
+                Conversion Funnel
+             </h3>
+             <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">
+                <div class="flex items-center">
+                  <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Raw Logged</div>
+                  <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
+                    <div id="funnel-raw-bar" class="h-full bg-blue-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 100%">
+                      <span id="funnel-raw-count">-</span><span class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(100%)</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-6 flex items-center">
-                <span id="funnel-c-rate" class="badge bg-secondary ml-4">-% Conversion</span>
-              </div>
-              <div class="flex items-center">
-                <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Confirmed</div>
-                <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
-                  <div id="funnel-confirm-bar" class="h-full bg-amber-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 0%">
-                    <span id="funnel-confirm-count">-</span><span id="funnel-confirm-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
+                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-6 flex items-center">
+                  <span id="funnel-c-rate" class="badge bg-secondary ml-4">-% Conversion</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Confirmed</div>
+                  <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
+                    <div id="funnel-confirm-bar" class="h-full bg-amber-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 0%">
+                      <span id="funnel-confirm-count">-</span><span id="funnel-confirm-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-6 flex items-center">
-                <span id="funnel-r-rate" class="badge bg-secondary ml-4">-% Conversion</span>
-              </div>
-              <div class="flex items-center">
-                <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Reviewed</div>
-                <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
-                  <div id="funnel-review-bar" class="h-full bg-emerald-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 0%">
-                    <span id="funnel-review-count">-</span><span id="funnel-review-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
+                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-6 flex items-center">
+                  <span id="funnel-r-rate" class="badge bg-secondary ml-4">-% Conversion</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Reviewed</div>
+                  <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
+                    <div id="funnel-review-bar" class="h-full bg-emerald-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 0%">
+                      <span id="funnel-review-count">-</span><span id="funnel-review-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-           </div>
-        </div>
-
-        <!-- Leaderboard -->
-        <div class="flex flex-col h-[350px]">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
-              <span class="material-symbols-outlined text-yellow-500 text-[20px]">emoji_events</span>
-              Fast Review Leaderboard
-            </h3>
+             </div>
           </div>
-          <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
-            <table class="data-table compact text-center">
-              <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
-                <tr>
-                  <th class="w-16">Rank</th>
-                  <th class="text-left">Team</th>
-                  <th>Total Reviews</th>
-                  <th>Median Speed</th>
-                </tr>
-              </thead>
-              <tbody id="leaderboard-tbody"></tbody>
-            </table>
-          </div>
-        </div>
 
+          <!-- Leaderboard -->
+          <div class="flex flex-col h-[350px]">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-yellow-500 text-[20px]">emoji_events</span>
+                Fast Review Leaderboard
+              </h3>
+            </div>
+            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+              <table class="data-table compact text-center">
+                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                  <tr>
+                    <th class="w-16">Rank</th>
+                    <th class="text-left">Team</th>
+                    <th>Total Reviews</th>
+                    <th>Median Speed</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboard-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <!-- Charts Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
-          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">Daily Reviews & Backlog</h3>
-          <div class="relative flex-1 w-full min-h-[200px]">
-            <canvas id="chart-daily"></canvas>
+      <!-- TAB 2: Health & Risk -->
+      <div id="tab-health" class="tab-pane space-y-8 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Health Summary -->
+          <div class="flex flex-col">
+            <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
+              Health Parameters
+            </h3>
+            <div id="health-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+              <div class="loading text-slate-500 text-sm col-span-2">Loading health parameters...</div>
+            </div>
+          </div>
+
+          <!-- Risk Teams Table -->
+          <div class="flex flex-col h-[500px]">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-rose-500 text-[20px]">warning</span>
+                Top Risk Teams
+              </h3>
+              <button class="text-primary text-xs font-bold hover:underline" onclick="document.getElementById('weights-modal').showModal()">Tweak Weights</button>
+            </div>
+            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
+              <table class="data-table">
+                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                  <tr><th>Team</th><th>Score</th><th style="width: 50%">Intensity</th></tr>
+                </thead>
+                <tbody id="risk-tbody">
+                  <tr><td colspan="3" class="text-center text-slate-500 text-sm italic">Loading risk scores...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
-          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">Time Distribution</h3>
-          <div class="relative flex-1 w-full min-h-[200px]">
-            <canvas id="chart-dist"></canvas>
+      </div>
+
+      <!-- TAB 3: Charts -->
+      <div id="tab-charts" class="tab-pane space-y-8 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">Daily Reviews & Backlog</h3>
+            <div class="relative flex-1 w-full min-h-[300px]">
+              <canvas id="chart-daily"></canvas>
+            </div>
           </div>
-        </div>
-        <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
-          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">SLA Compliance</h3>
-          <div class="relative flex-1 w-full min-h-[200px]">
-            <canvas id="chart-sla"></canvas>
+          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">Time Distribution</h3>
+            <div class="relative flex-1 w-full min-h-[300px]">
+              <canvas id="chart-dist"></canvas>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">SLA Compliance</h3>
+            <div class="relative flex-1 w-full min-h-[300px]">
+              <canvas id="chart-sla"></canvas>
+            </div>
           </div>
         </div>
       </div>
