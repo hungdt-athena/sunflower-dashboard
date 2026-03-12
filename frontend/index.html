@@ -28,15 +28,6 @@
 </head>
 <body class="bg-background-light text-slate-900 font-display min-h-screen flex overflow-hidden">
 
-  <!-- Command Palette Modal -->
-  <dialog id="cmd-palette" class="modal w-full max-w-2xl mx-auto mt-20 rounded-xl bg-white shadow-2xl border border-slate-200">
-    <div class="p-0">
-      <input type="text" id="cmd-input" placeholder="Jump to team, section, or action... (Esc to close)" autocomplete="off" 
-            class="w-full bg-transparent text-xl p-6 border-b border-slate-200 text-slate-900 focus:outline-none placeholder-slate-400">
-      <ul id="cmd-results" class="max-h-[400px] overflow-y-auto custom-scrollbar"></ul>
-    </div>
-  </dialog>
-
   <!-- Drilldown Modal -->
   <dialog id="drilldown-modal" class="modal w-full max-w-6xl mx-auto rounded-xl bg-white shadow-2xl border border-slate-200">
     <div class="drilldown-header px-8 py-6 flex justify-between items-center bg-slate-50 rounded-t-xl">
@@ -127,17 +118,6 @@
             <p class="text-sm font-semibold group-hover:text-primary transition-colors">Trend Charts</p>
         </button>
     </nav>
-
-    <!-- Bottom Action -->
-    <div class="p-4 border-t border-slate-200 bg-slate-50/50">
-        <button onclick="document.getElementById('cmd-palette').showModal(); document.getElementById('cmd-input').focus();" class="w-full flex justify-between items-center px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-primary hover:border-primary/50 transition-colors shadow-sm">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">search</span>
-                <span class="text-sm font-semibold">Search</span>
-            </div>
-            <span class="text-[10px] font-bold bg-slate-100 px-1.5 py-0.5 border border-slate-200 rounded">⌘K</span>
-        </button>
-    </div>
   </aside>
 
   <!-- Main Content Area -->
@@ -149,7 +129,6 @@
             <h2 id="view-title" class="text-slate-900 text-[17px] font-bold">KPIs & Activity</h2>
         </div>
         <div class="flex items-center gap-4">
-            
             <div class="flex items-center gap-3 pl-1">
                 <div class="flex items-center gap-2">
                   <div id="sync-indicator" class="status-dot size-2 rounded-full bg-slate-300"></div>
@@ -193,11 +172,14 @@
       <div id="tab-kpis" class="tab-pane space-y-8 block">
         <!-- KPI Row -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <!-- Total Meeting moved to front -->
+            
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="total">
                 <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Meeting</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center">
+                      Total Meeting
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Toàn bộ lượng data thô kéo về từ Extension và Google Sheets.</span></span>
+                    </p>
                     <span class="material-symbols-outlined text-blue-500 text-[18px]">list_alt</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
@@ -212,7 +194,10 @@
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="reviewed">
                 <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Reviewed</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center">
+                      Reviewed
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số lượng meeting đã hoàn thành các bước Review.</span></span>
+                    </p>
                     <span class="material-symbols-outlined text-emerald-500 text-[18px]">check_circle</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
@@ -227,7 +212,10 @@
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="needConfirm">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Unconfirmed</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center">
+                      Unconfirmed
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số cuộc họp thô chưa được xác nhận để bắt đầu vòng đời Review.</span></span>
+                    </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px]">error</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
@@ -239,7 +227,10 @@
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="unreviewed">
                 <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Unreviewed</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center">
+                      Unreviewed
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số cuộc họp đã xác nhận nhưng còn đọng lại, chưa được Review.</span></span>
+                    </p>
                     <span class="material-symbols-outlined text-amber-500 text-[18px]">pending_actions</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
@@ -251,7 +242,10 @@
             <div class="bg-rose-50/50 border border-rose-200 p-5 rounded-xl shadow-sm hover:border-rose-400 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="slabreach">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-rose-700 text-xs font-bold uppercase tracking-wider">SLA Breach</p>
+                    <p class="text-rose-700 text-xs font-bold uppercase tracking-wider flex items-center">
+                      SLA Breach
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined text-rose-500 opacity-60 tooltip-icon">help</span><span class="tooltip-content">Chỉ số vi phạm thời hạn đánh giá quy chuẩn (>4h).</span></span>
+                    </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px]">timer_off</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
@@ -266,15 +260,24 @@
           <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 to-transparent pointer-events-none"></div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative z-10">
             <div class="flex flex-col items-center justify-center p-2">
-              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review</p>
+              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Thời gian trung bình để xử lý xong một đánh giá (Review).</span></span>
+              </p>
               <p class="text-4xl font-bold text-slate-800" id="stat-avg-hours">-</p>
             </div>
             <div class="flex flex-col items-center justify-center p-2">
-              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review</p>
+              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Giá trị trung vị của thời gian xử lý các đánh giá (chính xác hơn số trung bình).</span></span>
+              </p>
               <p class="text-4xl font-bold text-slate-800" id="stat-median-hours">-</p>
             </div>
             <div class="flex flex-col items-center justify-center p-2">
-              <p class="text-primary/70 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">speed</span> Velocity</p>
+              <p class="text-primary/70 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[14px]">speed</span> Velocity
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined text-primary/70 hover:text-primary tooltip-icon">help</span><span class="tooltip-content">Tốc độ đánh giá (Số meeting được reviews / Mỗi ngày).</span></span>
+              </p>
               <div class="flex items-baseline gap-1.5">
                 <p class="text-4xl font-bold text-primary" id="stat-velocity">-</p>
                 <span class="text-slate-400 font-bold text-xs uppercase tracking-wider">rev/d</span>
@@ -292,6 +295,7 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
                 Unreviewed Queue
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Danh sách các nhóm tồn đọng những reviews cần thực hiện nhất, xếp theo tổng số.</span></span>
               </h3>
               <span class="badge bg-amber">Confirmed</span>
             </div>
@@ -311,6 +315,7 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
                 Unconfirmed Actions
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Các meeting thô từ Google Drive chưa được phân loại và xác nhận cho các team.</span></span>
               </h3>
               <span class="badge bg-red">Raw</span>
             </div>
@@ -333,6 +338,7 @@
              <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-blue-500 text-[20px]">filter_alt</span>
                 Conversion Funnel
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Tỉ lệ chuyển đổi ở các bước: Meeting thô -> Meeting đã xác nhận -> Meeting được hoàn thành Review.</span></span>
              </h3>
              <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">
                 <div class="flex items-center">
@@ -374,6 +380,7 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-yellow-500 text-[20px]">emoji_events</span>
                 Fast Review Leaderboard
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Vinh danh các đội nhóm có tốc độ đánh giá các meeting hiệu quả nhất.</span></span>
               </h3>
             </div>
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
@@ -403,6 +410,7 @@
             <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
               Health Parameters
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Tình hình sức khoẻ kết nối Backend N8N, lượng items xử lý hàng ngày và tình trạng tài xế/nguồn cấp.</span></span>
             </h3>
             <div id="health-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
               <div class="loading text-slate-500 text-sm col-span-2">Loading health parameters...</div>
@@ -415,6 +423,7 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">warning</span>
                 Top Risk Teams
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Hệ số rủi ro trễ hẹn quy trình của từng team - được tính từ các biến số (chế độ Tweak Weights bên dưới).</span></span>
               </h3>
               <button class="text-primary text-xs font-bold hover:underline" onclick="document.getElementById('weights-modal').showModal()">Tweak Weights</button>
             </div>
@@ -436,19 +445,28 @@
       <div id="tab-charts" class="tab-pane space-y-8 hidden">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Daily Reviews & Backlog</h3>
+            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+              Daily Reviews & Backlog
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số lượng báo cáo mới, báo cáo đã đánh giá và số lượng đang tồn đọng theo từng ngày.</span></span>
+            </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-daily"></canvas>
             </div>
           </div>
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Time Distribution</h3>
+            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+              Time Distribution
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Tỉ lệ hoàn thiện đánh giá nhanh (dưới 1h, 2h, hoặc 4h) giúp phân bổ ca làm việc nhóm theo giờ cao điểm.</span></span>
+            </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-dist"></canvas>
             </div>
           </div>
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">SLA Compliance</h3>
+            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+              SLA Compliance
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Chỉ số phần trăm các cuộc họp có lịch sử chờ xem >4h bị tính vi phạm hợp đồng (SLA). Thấp thì tốt!</span></span>
+            </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-sla"></canvas>
             </div>

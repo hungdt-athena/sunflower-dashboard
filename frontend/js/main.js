@@ -96,10 +96,7 @@ window.appData = {
       this.renderAll();
     });
 
-    // CMD Palette Esc
-    document.getElementById('cmd-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') document.getElementById('cmd-palette').close();
-    });
+
   },
 
   async renderAll() {
