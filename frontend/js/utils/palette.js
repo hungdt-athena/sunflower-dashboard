@@ -15,11 +15,10 @@ const Palette = {
   },
 
   theme: {
-    isDark() { return document.documentElement.classList.contains('dark'); },
-    text() { return this.isDark() ? '#f8fafc' : '#0f172a'; },
-    muted() { return this.isDark() ? '#475569' : '#cbd5e1'; },
-    grid() { return this.isDark() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'; },
-    panel() { return this.isDark() ? '#1e293b' : '#ffffff'; }
+    text() { return '#0f172a'; },
+    muted() { return '#cbd5e1'; },
+    grid() { return 'rgba(0,0,0,0.05)'; },
+    panel() { return '#ffffff'; }
   },
 
   // Deterministic color assignment for teams

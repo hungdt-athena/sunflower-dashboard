@@ -1,4 +1,4 @@
-/* Custom scrollbars matching the dark/light example */
+/* Custom scrollbars matching the light example */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -19,7 +19,6 @@ body {
 
 /* Legacy CSS classes for Javascript mappings */
 .text-muted { color: #94a3b8; }
-.dark .text-muted { color: #64748b; }
 
 .summary-green { color: #10b981 !important; text-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
 .summary-amber { color: #f59e0b !important; text-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
@@ -42,7 +41,6 @@ body {
 
 /* Background maps for badges */
 .bg-secondary { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
-.dark .bg-secondary { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); }
 
 .bg-red { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
 .bg-amber { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
@@ -77,14 +75,6 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.dark .data-table th { 
-  color: #94a3b8; 
-  border-bottom: 1px solid rgba(255, 140, 0, 0.15); 
-}
-.dark .data-table td { 
-  border-bottom: 1px solid rgba(255, 140, 0, 0.1); 
-  color: #f1f5f9;
-}
 .data-table.compact th, .data-table.compact td { 
   padding: 0.65rem 1rem; 
 }
@@ -105,17 +95,9 @@ body {
   color: #64748b;
   cursor: pointer;
 }
-.dark .time-tabs .tab-btn {
-  color: #94a3b8;
-}
 .time-tabs .tab-btn:hover {
   background: rgba(148, 163, 184, 0.1);
 }
-.dark .time-tabs .tab-btn:hover {
-  background: rgba(255, 140, 0, 0.05);
-}
-
-/* Base styles managed by Tailwind in index.html for active tab */
 
 /* Sync Indicator Status */
 .status-dot { transition: all 0.3s ease; }
@@ -140,7 +122,6 @@ body {
 /* Command Palette Custom CSS */
 #cmd-results { list-style: none; padding-left: 0;}
 #cmd-results li { padding: 1rem 1.5rem; border-bottom: 1px solid rgba(148, 163, 184, 0.2); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;}
-.dark #cmd-results li { border-bottom: 1px solid rgba(255, 140, 0, 0.1); color: #e2e8f0; }
 #cmd-results li:hover, #cmd-results li.selected { background: rgba(255, 140, 0, 0.1); color: #ff8c00; }
 
 /* Risk Weights Modal overrides */
@@ -157,11 +138,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-.dark .health-item {
-  background: rgba(255, 140, 0, 0.05);
-  border: 1px solid rgba(255, 140, 0, 0.15);
-  box-shadow: none;
-}
 .health-label {
   font-size: 0.75rem;
   font-weight: 700;
@@ -169,9 +145,6 @@ body {
   letter-spacing: 0.05em;
   color: #64748b;
   margin-bottom: 0.5rem;
-}
-.dark .health-label {
-  color: #94a3b8;
 }
 .health-val {
   font-size: 0.95rem;
@@ -182,5 +155,4 @@ body {
 .risk-score-wrapper { display: flex; align-items: center; }
 .score-badge { padding: 0.15rem 0.5rem; border-radius: 0.25rem; font-weight: bold; font-size: 0.75rem; min-width: 48px; text-align: center; }
 .risk-bar-container { background: rgba(148, 163, 184, 0.2); height: 6px; border-radius: 4px; overflow: hidden; margin: 0 1rem; }
-.dark .risk-bar-container { background: rgba(255, 140, 0, 0.1); }
 .risk-bar { height: 100%; border-radius: 4px; }

@@ -34,41 +34,60 @@ window.appData = {
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.tab-btn').forEach(b => {
-          b.classList.remove('active', 'bg-white', 'text-slate-900', 'dark:bg-primary/10', 'dark:text-primary', 'border', 'border-slate-200', 'dark:border-primary/30', 'shadow-sm', 'font-bold');
-          b.classList.add('font-semibold');
+          b.classList.remove('active', 'bg-white', 'text-primary', 'border', 'border-slate-200', 'shadow-sm', 'font-bold');
+          b.classList.add('font-semibold', 'text-slate-600');
         });
         
-        e.target.classList.remove('font-semibold');
-        e.target.classList.add('active', 'bg-white', 'text-slate-900', 'dark:bg-primary/10', 'dark:text-primary', 'border', 'border-slate-200', 'dark:border-primary/30', 'shadow-sm', 'font-bold');
+        e.target.classList.remove('font-semibold', 'text-slate-600');
+        e.target.classList.add('active', 'bg-white', 'text-primary', 'border', 'border-slate-200', 'shadow-sm', 'font-bold');
         
         this.state.range = e.target.dataset.range;
         this.renderAll();
       });
     });
 
-    // Navigation Tabs
+    // Navigation Tabs (Sidebar)
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const inactiveClasses = ['text-slate-500', 'hover:text-slate-700', 'dark:text-slate-400', 'dark:hover:text-slate-200', 'border-transparent'];
-        const activeClasses = ['active', 'text-primary', 'border-primary'];
+        const btnNode = e.currentTarget;
+        const tabId = btnNode.dataset.tab;
+        
+        const inactiveClasses = ['text-slate-600', 'hover:bg-slate-50', 'border-transparent', 'group'];
+        const activeClasses = ['active', 'bg-primary/10', 'text-primary', 'border-primary/20', 'shadow-sm'];
 
         document.querySelectorAll('.nav-tab-btn').forEach(b => {
           b.classList.remove(...activeClasses);
           b.classList.add(...inactiveClasses);
+          const icon = b.querySelector('.material-symbols-outlined');
+          if(icon) icon.classList.add('group-hover:text-primary');
+          const p = b.querySelector('p');
+          if(p) p.classList.add('group-hover:text-primary');
         });
         
-        e.target.classList.remove(...inactiveClasses);
-        e.target.classList.add(...activeClasses);
+        btnNode.classList.remove(...inactiveClasses);
+        btnNode.classList.add(...activeClasses);
         
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
-        document.getElementById(e.target.dataset.tab).classList.remove('hidden');
-      });
-    });
+        const activeIcon = btnNode.querySelector('.material-symbols-outlined');
+        if(activeIcon) activeIcon.classList.remove('group-hover:text-primary');
+        const activeP = btnNode.querySelector('p');
+        if(activeP) activeP.classList.remove('group-hover:text-primary');
 
-    // Theme toggle
-    document.getElementById('btn-theme').addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      updateChartTheme();
+        // Toggle Tabs
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden', 'block'));
+        const activeTab = document.getElementById(tabId);
+        if(activeTab) {
+          activeTab.classList.remove('hidden');
+          activeTab.classList.add('block');
+        }
+
+        // Update Title
+        if(activeP) {
+          document.getElementById('view-title').textContent = activeP.textContent;
+        }
+
+        // Toggle Team filter visibility (only visible in KPIs tab)
+        document.getElementById('filter-team-container').style.display = (tabId === 'tab-kpis') ? 'flex' : 'none';
+      });
     });
 
     // Refresh

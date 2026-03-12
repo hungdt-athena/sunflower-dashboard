@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -11,10 +11,9 @@
   
   <script id="tailwind-config">
     tailwind.config = {
-        darkMode: "class",
         theme: {
             extend: {
-                colors: { "primary": "#ff8c00", "background-light": "#f8f7f5", "background-dark": "#1f1814" },
+                colors: { "primary": "#ff8c00", "background-light": "#f8f7f5" },
                 fontFamily: { "display": ["Inter", "sans-serif"] },
                 borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
             },
@@ -27,24 +26,24 @@
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
   </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex overflow-hidden">
+<body class="bg-background-light text-slate-900 font-display min-h-screen flex overflow-hidden">
 
   <!-- Command Palette Modal -->
-  <dialog id="cmd-palette" class="modal w-full max-w-2xl mx-auto mt-20 rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-primary/20">
+  <dialog id="cmd-palette" class="modal w-full max-w-2xl mx-auto mt-20 rounded-xl bg-white shadow-2xl border border-slate-200">
     <div class="p-0">
       <input type="text" id="cmd-input" placeholder="Jump to team, section, or action... (Esc to close)" autocomplete="off" 
-            class="w-full bg-transparent text-xl p-6 border-b border-slate-200 dark:border-primary/10 text-slate-900 dark:text-slate-100 focus:outline-none placeholder-slate-400">
+            class="w-full bg-transparent text-xl p-6 border-b border-slate-200 text-slate-900 focus:outline-none placeholder-slate-400">
       <ul id="cmd-results" class="max-h-[400px] overflow-y-auto custom-scrollbar"></ul>
     </div>
   </dialog>
 
   <!-- Drilldown Modal -->
-  <dialog id="drilldown-modal" class="modal w-full max-w-6xl mx-auto rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-primary/20">
-    <div class="drilldown-header px-8 py-6 flex justify-between items-center bg-slate-50 dark:bg-primary/5 rounded-t-xl">
+  <dialog id="drilldown-modal" class="modal w-full max-w-6xl mx-auto rounded-xl bg-white shadow-2xl border border-slate-200">
+    <div class="drilldown-header px-8 py-6 flex justify-between items-center bg-slate-50 rounded-t-xl">
       <h2 id="drilldown-title" class="text-xl font-bold">Details</h2>
       <div class="flex gap-4">
-        <button id="btn-export-csv" class="px-4 py-2 bg-white dark:bg-primary/10 text-slate-700 dark:text-primary rounded-lg border border-slate-200 dark:border-primary/20 font-semibold hover:bg-slate-100 dark:hover:bg-primary/20 transition-colors shadow-sm">📥 Export CSV</button>
-        <button id="btn-close-drilldown" class="size-10 flex border-slate-200 dark:border-primary/10 border items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-primary/10 transition-colors bg-white dark:bg-primary/5">✕</button>
+        <button id="btn-export-csv" class="px-4 py-2 bg-white text-slate-700 rounded-lg border border-slate-200 font-semibold hover:bg-slate-100 transition-colors shadow-sm">📥 Export CSV</button>
+        <button id="btn-close-drilldown" class="size-10 flex border-slate-200 border items-center justify-center rounded-lg hover:bg-slate-100 transition-colors bg-white">✕</button>
       </div>
     </div>
     <div class="table-container fade-bottom p-4">
@@ -56,160 +55,153 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination px-8 py-4 border-t border-slate-200 dark:border-primary/10 flex justify-between items-center text-sm font-medium text-slate-500 dark:text-slate-400">
-      <button id="btn-prev-page" class="px-4 py-2 border border-slate-200 dark:border-primary/20 rounded-lg hover:bg-slate-100 dark:hover:bg-primary/10 transition-colors shadow-sm bg-white dark:bg-transparent">← Prev</button>
+    <div class="pagination px-8 py-4 border-t border-slate-200 flex justify-between items-center text-sm font-medium text-slate-500">
+      <button id="btn-prev-page" class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors shadow-sm bg-white">← Prev</button>
       <span id="page-indicator">Page 1 / 1</span>
-      <button id="btn-next-page" class="px-4 py-2 border border-slate-200 dark:border-primary/20 rounded-lg hover:bg-slate-100 dark:hover:bg-primary/10 transition-colors shadow-sm bg-white dark:bg-transparent">Next →</button>
+      <button id="btn-next-page" class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors shadow-sm bg-white">Next →</button>
     </div>
   </dialog>
 
   <!-- Risk Weights Modal -->
-  <dialog id="weights-modal" class="modal w-full max-w-md mx-auto rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-primary/20">
-    <div class="px-6 py-5 border-b border-slate-200 dark:border-primary/10 flex justify-between items-center bg-slate-50 dark:bg-primary/5 rounded-t-xl">
+  <dialog id="weights-modal" class="modal w-full max-w-md mx-auto rounded-xl bg-white shadow-2xl border border-slate-200">
+    <div class="px-6 py-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl">
       <h2 class="text-lg font-bold">⚙️ Adjust Risk Weights</h2>
-      <button id="btn-close-weights" class="size-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-primary/10 border border-slate-200 dark:border-primary/10 bg-white dark:bg-transparent">✕</button>
+      <button id="btn-close-weights" class="size-8 flex items-center justify-center rounded-lg hover:bg-slate-100 border border-slate-200 bg-white">✕</button>
     </div>
     <div class="p-6 space-y-6">
-      <p class="text-sm text-slate-500 dark:text-slate-400">Adjust exactly how the Risk Score is calculated. Sliders must sum to 100%.</p>
+      <p class="text-sm text-slate-500">Adjust exactly how the Risk Score is calculated. Sliders must sum to 100%.</p>
       
       <div class="space-y-4">
         <div>
           <label class="flex justify-between text-sm font-medium mb-2">SLA Breach (>4h) <span id="val-w-sla" class="text-primary font-bold">30%</span></label>
-          <input type="range" id="w-sla" min="0" max="100" value="30" class="w-full accent-primary">
+          <input type="range" id="w-sla" step="5" min="0" max="100" value="30" class="w-full accent-primary">
         </div>
         <div>
           <label class="flex justify-between text-sm font-medium mb-2">Unconfirmed <span id="val-w-unconfirmed" class="text-primary font-bold">25%</span></label>
-          <input type="range" id="w-unconfirmed" min="0" max="100" value="25" class="w-full accent-primary">
+          <input type="range" id="w-unconfirmed" step="5" min="0" max="100" value="25" class="w-full accent-primary">
         </div>
         <div>
           <label class="flex justify-between text-sm font-medium mb-2">Unreviewed <span id="val-w-unreviewed" class="text-primary font-bold">20%</span></label>
-          <input type="range" id="w-unreviewed" min="0" max="100" value="20" class="w-full accent-primary">
+          <input type="range" id="w-unreviewed" step="5" min="0" max="100" value="20" class="w-full accent-primary">
         </div>
         <div>
           <label class="flex justify-between text-sm font-medium mb-2">Average Hours <span id="val-w-avg" class="text-primary font-bold">15%</span></label>
-          <input type="range" id="w-avg" min="0" max="100" value="15" class="w-full accent-primary">
+          <input type="range" id="w-avg" step="5" min="0" max="100" value="15" class="w-full accent-primary">
         </div>
         <div>
           <label class="flex justify-between text-sm font-medium mb-2">Re-review Rate <span id="val-w-rerev" class="text-primary font-bold">10%</span></label>
-          <input type="range" id="w-rerev" min="0" max="100" value="10" class="w-full accent-primary">
+          <input type="range" id="w-rerev" step="5" min="0" max="100" value="10" class="w-full accent-primary">
         </div>
       </div>
       
-      <div class="pt-6 border-t border-slate-200 dark:border-primary/10 flex justify-between items-center">
+      <div class="pt-6 border-t border-slate-200 flex justify-between items-center">
         <div id="weights-total" class="total-valid text-lg">Total: 100%</div>
-        <button id="btn-apply-weights" class="px-4 py-2 bg-primary text-background-dark font-bold rounded-lg hover:bg-orange-500 transition-colors shadow-sm">Apply & Recalculate</button>
+        <button id="btn-apply-weights" class="px-4 py-2 bg-primary text-white font-bold rounded-lg hover:bg-orange-500 transition-colors shadow-sm">Apply & Recalculate</button>
       </div>
     </div>
   </dialog>
 
   <!-- Sidebar -->
-  <aside class="w-64 border-r border-slate-200 dark:border-primary/10 bg-white dark:bg-background-dark flex flex-col z-20 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
+  <aside class="w-64 border-r border-slate-200 bg-white flex flex-col z-20 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
     <div class="p-6 flex items-center gap-3 border-b border-transparent">
-        <div class="size-10 bg-primary/10 dark:bg-primary rounded-xl flex items-center justify-center text-primary dark:text-background-dark border border-primary/20 shadow-sm">
+        <div class="size-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary border border-primary/20 shadow-sm">
             <span class="material-symbols-outlined font-bold text-[24px]">local_florist</span>
         </div>
         <div class="flex flex-col">
-            <h1 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold leading-none">Sunflower</h1>
+            <h1 class="text-slate-900 text-[17px] font-bold leading-none">Sunflower</h1>
             <p class="text-primary text-[10px] font-bold uppercase tracking-widest mt-1">Realtime Tracker</p>
         </div>
     </div>
     
     <nav class="flex-1 px-4 py-4 space-y-2">
-        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary border border-primary/20 cursor-pointer shadow-sm">
-            <span class="material-symbols-outlined text-[20px]">dashboard</span>
-            <p class="text-sm font-bold">Metrics Overview</p>
-        </div>
-        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors cursor-pointer group border border-transparent" onclick="document.getElementById('cmd-palette').showModal(); document.getElementById('cmd-input').focus();">
-            <span class="material-symbols-outlined text-[20px] group-hover:text-primary">search</span>
-            <p class="text-sm font-semibold group-hover:text-primary transition-colors">Search Logs (⌘K)</p>
-        </div>
-        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors cursor-pointer group border border-transparent" onclick="document.getElementById('weights-modal').showModal()">
-            <span class="material-symbols-outlined text-[20px] group-hover:text-primary">tune</span>
-            <p class="text-sm font-semibold group-hover:text-primary transition-colors">Risk Parameters</p>
-        </div>
+        <button class="nav-tab-btn w-full items-center flex gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary border border-primary/20 cursor-pointer shadow-sm active" data-tab="tab-kpis">
+            <span class="material-symbols-outlined text-[20px]">dashboard_customize</span>
+            <p class="text-sm font-bold">KPIs & Activity</p>
+        </button>
+        <button class="nav-tab-btn w-full items-center flex gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer group border border-transparent" data-tab="tab-health">
+            <span class="material-symbols-outlined text-[20px] group-hover:text-primary">health_and_safety</span>
+            <p class="text-sm font-semibold group-hover:text-primary transition-colors">Health & Risk</p>
+        </button>
+        <button class="nav-tab-btn w-full items-center flex gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer group border border-transparent" data-tab="tab-charts">
+            <span class="material-symbols-outlined text-[20px] group-hover:text-primary">show_chart</span>
+            <p class="text-sm font-semibold group-hover:text-primary transition-colors">Trend Charts</p>
+        </button>
     </nav>
-    
-    <!-- Time Tabs (Vertical) -->
-    <div class="p-4 border-t border-slate-200 dark:border-primary/10 bg-slate-50/50 dark:bg-transparent">
-      <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 px-2">Time Filter</p>
-      <div class="time-tabs flex flex-col gap-1">
-        <button class="tab-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold transition-all" data-range="today">Today</button>
-        <button class="tab-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold transition-all" data-range="3d">Last 3 Days</button>
-        <button class="tab-btn active border border-slate-200 dark:border-primary/30 w-full text-left px-3 py-2 rounded-lg text-sm font-bold transition-all shadow-sm bg-white dark:bg-primary/10 text-slate-900 dark:text-primary" data-range="7d">Last 7 Days</button>
-        <button class="tab-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold transition-all" data-range="30d">Last 30 Days</button>
-        <button class="tab-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold transition-all" data-range="all">All Time Logs</button>
-      </div>
+
+    <!-- Bottom Action -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50/50">
+        <button onclick="document.getElementById('cmd-palette').showModal(); document.getElementById('cmd-input').focus();" class="w-full flex justify-between items-center px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-primary hover:border-primary/50 transition-colors shadow-sm">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">search</span>
+                <span class="text-sm font-semibold">Search</span>
+            </div>
+            <span class="text-[10px] font-bold bg-slate-100 px-1.5 py-0.5 border border-slate-200 rounded">⌘K</span>
+        </button>
     </div>
   </aside>
 
   <!-- Main Content Area -->
-  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-background-light dark:bg-background-dark">
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-background-light">
     <!-- Header -->
-    <header class="h-16 border-b border-slate-200 dark:border-primary/10 flex items-center justify-between px-8 bg-white/80 dark:bg-background-dark/80 backdrop-blur-xl shrink-0 z-10 shadow-sm">
+    <header class="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-xl shrink-0 z-10 shadow-sm">
         <div class="flex items-center gap-3">
             <span class="material-symbols-outlined text-primary text-[22px]">monitoring</span>
-            <h2 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold">Operational Metrics</h2>
+            <h2 id="view-title" class="text-slate-900 text-[17px] font-bold">KPIs & Activity</h2>
         </div>
         <div class="flex items-center gap-4">
             
-            <div class="flex items-center border border-slate-200 dark:border-primary/20 bg-white dark:bg-primary/5 rounded-lg overflow-hidden h-[34px] shadow-sm">
-              <span class="material-symbols-outlined text-slate-400 text-[18px] ml-2">filter_list</span>
-              <select id="team-filter" class="w-36 bg-transparent border-none text-xs text-slate-700 dark:text-slate-300 font-bold focus:ring-0 cursor-pointer">
-                 <option value="all">All Teams</option>
-              </select>
-            </div>
-            
-            <div class="h-5 w-[1px] bg-slate-200 dark:bg-primary/10"></div>
-
-            <button id="btn-theme" class="size-[34px] rounded-lg border border-slate-200 dark:border-primary/20 bg-white dark:bg-primary/5 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors shadow-sm">
-                <span class="material-symbols-outlined text-[18px]">lightbulb</span>
-            </button>
-            <div class="h-5 w-[1px] bg-slate-200 dark:bg-primary/10"></div>
-            
             <div class="flex items-center gap-3 pl-1">
                 <div class="flex items-center gap-2">
-                  <div id="sync-indicator" class="status-dot size-2 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+                  <div id="sync-indicator" class="status-dot size-2 rounded-full bg-slate-300"></div>
                   <span id="last-sync-time" class="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Wait...</span>
                 </div>
-                <button id="btn-refresh" class="relative group size-[34px] rounded-lg border border-slate-200 dark:border-primary/20 bg-white dark:bg-primary/5 flex items-center justify-center text-primary hover:bg-slate-50 dark:hover:bg-primary/10 transition-colors shadow-sm">
+                <button id="btn-refresh" class="relative group size-[34px] rounded-lg border border-slate-200 bg-white flex items-center justify-center text-primary hover:bg-slate-50 transition-colors shadow-sm">
                   <span class="material-symbols-outlined text-[18px] group-hover:rotate-180 transition-transform duration-500">sync</span>
                   <span id="new-rows-badge" class="badge-hidden absolute -top-1 -right-1 flex size-3">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full size-3 bg-rose-500 border-2 border-white dark:border-background-dark"></span>
+                    <span class="relative inline-flex rounded-full size-3 bg-rose-500 border-2 border-white"></span>
                   </span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <div class="flex border-b border-slate-200 dark:border-primary/10 px-8 pt-4 shrink-0 bg-white dark:bg-background-dark/50">
-      <button class="nav-tab-btn active px-4 py-3 text-sm font-bold text-primary border-b-2 border-primary transition-colors" data-tab="tab-kpis">
-        KPIs & Activity
-      </button>
-      <button class="nav-tab-btn px-4 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-b-2 border-transparent transition-colors" data-tab="tab-health">
-        Health & Risk
-      </button>
-      <button class="nav-tab-btn px-4 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-b-2 border-transparent transition-colors" data-tab="tab-charts">
-        Trend Charts
-      </button>
+    <!-- Global Filters Bar -->
+    <div class="px-8 py-3 bg-white border-b border-slate-200 shrink-0 flex items-center gap-4">
+       <!-- Time Filter (Always visible, put first) -->
+       <div class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 time-tabs">
+          <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="today">Today</button>
+          <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="3d">3D</button>
+          <button class="tab-btn active px-3 py-1.5 rounded-md text-sm font-bold bg-white text-primary shadow-sm border border-slate-200 transition-all" data-range="7d">7D</button>
+          <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="30d">30D</button>
+          <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="all">All Time</button>
+       </div>
+
+       <!-- Team Filter (Visible only on KPIs Tab) -->
+       <div id="filter-team-container" class="flex items-center border border-slate-200 bg-white rounded-lg h-[34px] shadow-sm overflow-hidden px-2 transition-opacity">
+         <span class="material-symbols-outlined text-slate-400 text-[18px] mr-1">filter_list</span>
+         <select id="team-filter" class="w-36 bg-transparent border-none text-xs text-slate-700 font-bold focus:ring-0 cursor-pointer p-0 py-1">
+            <option value="all">All Teams</option>
+         </select>
+       </div>
     </div>
 
     <!-- Scrollable Tab Content Container -->
     <div class="flex-1 overflow-y-auto custom-scrollbar p-8 pb-24">
       
       <!-- TAB 1: KPIs & Activity -->
-      <div id="tab-kpis" class="tab-pane space-y-8">
+      <div id="tab-kpis" class="tab-pane space-y-8 block">
         <!-- KPI Row -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="total">
+            <!-- Total Meeting moved to front -->
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="total">
                 <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Total Meeting</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Meeting</p>
                     <span class="material-symbols-outlined text-blue-500 text-[18px]">list_alt</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
-                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="stat-total">-</p>
+                    <p class="text-3xl font-bold text-slate-800" id="stat-total">-</p>
                     <div class="text-right flex flex-col items-end gap-1.5 mb-1">
                       <span id="stat-rawdup" class="badge bg-secondary">0 dup</span>
                       <span id="stat-tagmismatch" class="badge bg-amber hidden">0 mismatches</span>
@@ -217,72 +209,72 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="reviewed">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="reviewed">
                 <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Reviewed</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Reviewed</p>
                     <span class="material-symbols-outlined text-emerald-500 text-[18px]">check_circle</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
-                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-green" id="stat-reviewed">-</p>
+                    <p class="text-3xl font-bold text-slate-800 summary-green" id="stat-reviewed">-</p>
                     <div class="text-right flex flex-col items-end gap-1 mb-1">
-                      <p class="text-[10px] text-slate-400 font-bold tracking-wide">Rate: <span id="stat-rereview-rate" class="text-slate-600 dark:text-slate-300">0%</span></p>
+                      <p class="text-[10px] text-slate-400 font-bold tracking-wide">Rate: <span id="stat-rereview-rate" class="text-slate-600">0%</span></p>
                       <span id="stat-rereviewed" class="badge bg-secondary">0 re-rev</span>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="needConfirm">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="needConfirm">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Unconfirmed</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Unconfirmed</p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px]">error</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
-                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-red" id="stat-need-confirm">-</p>
+                    <p class="text-3xl font-bold text-slate-800 summary-red" id="stat-need-confirm">-</p>
                     <span class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80">Pending</span>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="unreviewed">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="unreviewed">
                 <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Unreviewed</p>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Unreviewed</p>
                     <span class="material-symbols-outlined text-amber-500 text-[18px]">pending_actions</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
-                    <p class="text-3xl font-bold text-slate-800 dark:text-slate-100 summary-amber" id="stat-unreviewed">-</p>
+                    <p class="text-3xl font-bold text-slate-800 summary-amber" id="stat-unreviewed">-</p>
                     <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-1 opacity-80">In Queue</span>
                 </div>
             </div>
 
-            <div class="bg-rose-50/50 dark:bg-primary/5 border border-rose-200 dark:border-rose-500/20 p-5 rounded-xl shadow-sm hover:border-rose-400 dark:hover:border-rose-500/50 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="slabreach">
+            <div class="bg-rose-50/50 border border-rose-200 p-5 rounded-xl shadow-sm hover:border-rose-400 transition-all cursor-pointer stat-clickable relative overflow-hidden group" data-stat="slabreach">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-rose-700 dark:text-rose-400/80 text-xs font-bold uppercase tracking-wider">SLA Breach</p>
+                    <p class="text-rose-700 text-xs font-bold uppercase tracking-wider">SLA Breach</p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px]">timer_off</span>
                 </div>
                 <div class="flex items-end justify-between mt-3">
-                    <p class="text-3xl font-bold text-rose-600 dark:text-rose-500" id="stat-sla-pct">-%</p>
+                    <p class="text-3xl font-bold text-rose-600" id="stat-sla-pct">-%</p>
                     <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80"><span id="stat-sla-count">0</span> Items</p>
                 </div>
             </div>
         </div>
 
         <!-- Time Stats Row -->
-        <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 overflow-hidden relative">
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 dark:via-primary/[0.02] to-transparent pointer-events-none"></div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-primary/10 relative z-10">
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 to-transparent pointer-events-none"></div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative z-10">
             <div class="flex flex-col items-center justify-center p-2">
-              <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review</p>
-              <p class="text-4xl font-bold text-slate-800 dark:text-slate-100" id="stat-avg-hours">-</p>
+              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review</p>
+              <p class="text-4xl font-bold text-slate-800" id="stat-avg-hours">-</p>
             </div>
             <div class="flex flex-col items-center justify-center p-2">
-              <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review</p>
-              <p class="text-4xl font-bold text-slate-800 dark:text-slate-100" id="stat-median-hours">-</p>
+              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review</p>
+              <p class="text-4xl font-bold text-slate-800" id="stat-median-hours">-</p>
             </div>
             <div class="flex flex-col items-center justify-center p-2">
-              <p class="text-primary/70 dark:text-primary/80 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">speed</span> Velocity</p>
+              <p class="text-primary/70 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">speed</span> Velocity</p>
               <div class="flex items-baseline gap-1.5">
                 <p class="text-4xl font-bold text-primary" id="stat-velocity">-</p>
                 <span class="text-slate-400 font-bold text-xs uppercase tracking-wider">rev/d</span>
@@ -297,15 +289,15 @@
           <!-- Unreviewed -->
           <div class="flex flex-col h-[320px]">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
                 Unreviewed Queue
               </h3>
               <span class="badge bg-amber">Confirmed</span>
             </div>
-            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
               <table class="data-table compact">
-                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
                   <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
                 </thead>
                 <tbody id="pending-unreviewed-tbody"></tbody>
@@ -316,15 +308,15 @@
           <!-- Unconfirmed -->
           <div class="flex flex-col h-[320px]">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
                 Unconfirmed Actions
               </h3>
               <span class="badge bg-red">Raw</span>
             </div>
-            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
               <table class="data-table compact">
-                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
                   <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
                 </thead>
                 <tbody id="pending-unconfirmed-tbody"></tbody>
@@ -338,36 +330,36 @@
           
           <!-- Funnel -->
           <div class="flex flex-col">
-             <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold mb-4 flex items-center gap-2">
+             <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-blue-500 text-[20px]">filter_alt</span>
                 Conversion Funnel
              </h3>
-             <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">
+             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">
                 <div class="flex items-center">
-                  <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Raw Logged</div>
-                  <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
+                  <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Raw Logged</div>
+                  <div class="flex-1 bg-slate-100 rounded-lg overflow-hidden h-9 flex border border-slate-200 shadow-inner">
                     <div id="funnel-raw-bar" class="h-full bg-blue-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 100%">
                       <span id="funnel-raw-count">-</span><span class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(100%)</span>
                     </div>
                   </div>
                 </div>
-                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-6 flex items-center">
+                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-6 flex items-center">
                   <span id="funnel-c-rate" class="badge bg-secondary ml-4">-% Conversion</span>
                 </div>
                 <div class="flex items-center">
-                  <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Confirmed</div>
-                  <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
+                  <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Confirmed</div>
+                  <div class="flex-1 bg-slate-100 rounded-lg overflow-hidden h-9 flex border border-slate-200 shadow-inner">
                     <div id="funnel-confirm-bar" class="h-full bg-amber-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 0%">
                       <span id="funnel-confirm-count">-</span><span id="funnel-confirm-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
                     </div>
                   </div>
                 </div>
-                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 dark:border-slate-700 h-6 flex items-center">
+                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-6 flex items-center">
                   <span id="funnel-r-rate" class="badge bg-secondary ml-4">-% Conversion</span>
                 </div>
                 <div class="flex items-center">
-                  <div class="w-32 font-bold text-slate-600 dark:text-slate-400 text-xs uppercase tracking-wider">Reviewed</div>
-                  <div class="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg overflow-hidden h-9 flex border border-slate-200 dark:border-primary/10 shadow-inner">
+                  <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Reviewed</div>
+                  <div class="flex-1 bg-slate-100 rounded-lg overflow-hidden h-9 flex border border-slate-200 shadow-inner">
                     <div id="funnel-review-bar" class="h-full bg-emerald-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)]" style="width: 0%">
                       <span id="funnel-review-count">-</span><span id="funnel-review-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
                     </div>
@@ -379,14 +371,14 @@
           <!-- Leaderboard -->
           <div class="flex flex-col h-[350px]">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-yellow-500 text-[20px]">emoji_events</span>
                 Fast Review Leaderboard
               </h3>
             </div>
-            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
               <table class="data-table compact text-center">
-                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
                   <tr>
                     <th class="w-16">Rank</th>
                     <th class="text-left">Team</th>
@@ -408,7 +400,7 @@
           
           <!-- Health Summary -->
           <div class="flex flex-col">
-            <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold mb-4 flex items-center gap-2">
+            <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
               Health Parameters
             </h3>
@@ -420,15 +412,15 @@
           <!-- Risk Teams Table -->
           <div class="flex flex-col h-[500px]">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-slate-900 dark:text-slate-100 text-[17px] font-bold flex items-center gap-2">
+              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">warning</span>
                 Top Risk Teams
               </h3>
               <button class="text-primary text-xs font-bold hover:underline" onclick="document.getElementById('weights-modal').showModal()">Tweak Weights</button>
             </div>
-            <div class="table-container flex-1 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
+            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
               <table class="data-table">
-                <thead class="bg-white/90 dark:bg-background-dark/90 backdrop-blur-md sticky top-0 z-10">
+                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
                   <tr><th>Team</th><th>Score</th><th style="width: 50%">Intensity</th></tr>
                 </thead>
                 <tbody id="risk-tbody">
@@ -443,20 +435,20 @@
       <!-- TAB 3: Charts -->
       <div id="tab-charts" class="tab-pane space-y-8 hidden">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">Daily Reviews & Backlog</h3>
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Daily Reviews & Backlog</h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-daily"></canvas>
             </div>
           </div>
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">Time Distribution</h3>
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Time Distribution</h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-dist"></canvas>
             </div>
           </div>
-          <div class="bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">SLA Compliance</h3>
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">SLA Compliance</h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-sla"></canvas>
             </div>
