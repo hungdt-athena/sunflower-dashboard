@@ -1,0 +1,16 @@
+entrypoint = "backend/server.js"
+modules = ["nodejs-20:v8-20230920-bd784b9"]
+
+hidden = [".config", "package-lock.json"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+build = ["sh", "-c", "npm install"]
+run = ["sh", "-c", "node backend/server.js"]
+deploymentTarget = "autoscale"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
