@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌻 Sunflower Dashboard</title>
+  
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-mode">
+  <!-- Command Palette Modal -->
+  <dialog id="cmd-palette" class="modal glass">
+    <div class="cmd-content">
+      <input type="text" id="cmd-input" placeholder="Jump to team, section, or action... (Esc to close)" autocomplete="off">
+      <ul id="cmd-results"></ul>
+    </div>
+  </dialog>
+
+  <!-- Drilldown Modal -->
+  <dialog id="drilldown-modal" class="modal glass">
+    <div class="drilldown-header">
+      <h2 id="drilldown-title">Details</h2>
+      <div class="drilldown-actions">
+        <button id="btn-export-csv" class="btn btn-secondary">📥 Export CSV</button>
+        <button id="btn-close-drilldown" class="btn btn-icon">✕</button>
+      </div>
+    </div>
+    <div class="table-container">
+      <table id="drilldown-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Title</th>
+            <th>Team</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Age / Hours</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody id="drilldown-body">
+          <!-- Rows injected here -->
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button id="btn-prev-page" class="btn btn-sm">← Prev</button>
+      <span id="page-indicator">Page 1 / 1</span>
+      <button id="btn-next-page" class="btn btn-sm">Next →</button>
+    </div>
+  </dialog>
+
+  <!-- Risk Weights Modal -->
+  <dialog id="weights-modal" class="modal glass">
+    <div class="weights-header">
+      <h2>⚙️ Adjust Risk Weights</h2>
+      <button id="btn-close-weights" class="btn btn-icon">✕</button>
+    </div>
+    <div class="weights-body">
+      <p class="text-secondary">Adjust exactly how the Risk Score is calculated. Sliders must sum to 100%.</p>
+      
+      <div class="weight-control">
+        <label>SLA Breach (>4h) <span id="val-w-sla">30%</span></label>
+        <input type="range" id="w-sla" min="0" max="100" value="30">
+      </div>
+      <div class="weight-control">
+        <label>Unconfirmed <span id="val-w-unconfirmed">25%</span></label>
+        <input type="range" id="w-unconfirmed" min="0" max="100" value="25">
+      </div>
+      <div class="weight-control">
+        <label>Unreviewed <span id="val-w-unreviewed">20%</span></label>
+        <input type="range" id="w-unreviewed" min="0" max="100" value="20">
+      </div>
+      <div class="weight-control">
+        <label>Average Hours <span id="val-w-avg">15%</span></label>
+        <input type="range" id="w-avg" min="0" max="100" value="15">
+      </div>
+      <div class="weight-control">
+        <label>Re-review Rate <span id="val-w-rerev">10%</span></label>
+        <input type="range" id="w-rerev" min="0" max="100" value="10">
+      </div>
+      
+      <div class="weights-footer">
+        <div id="weights-total" class="total-valid">Total: 100%</div>
+        <button id="btn-apply-weights" class="btn btn-primary">Apply & Recalculate</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Main HUD -->
+  <header class="top-nav glass-header">
+    <div class="nav-left">
+      <div class="logo">🌻 Sunflower</div>
+      
+      <div class="filter-group">
+        <select id="team-filter" class="select-css">
+          <option value="all">All Teams</option>
+          <!-- Injected dynamically -->
+        </select>
+      </div>
+      
+      <div class="time-tabs">
+        <button class="tab-btn" data-range="today">Today</button>
+        <button class="tab-btn" data-range="3d">3D</button>
+        <button class="tab-btn active" data-range="7d">7D</button>
+        <button class="tab-btn" data-range="30d">30D</button>
+        <button class="tab-btn" data-range="all">ALL</button>
+      </div>
+    </div>
+    
+    <div class="nav-right">
+      <button class="btn btn-cmd" onclick="document.getElementById('cmd-palette').showModal(); document.getElementById('cmd-input').focus();">
+        <span class="cmd-icon">⌘K</span> Jump
+      </button>
+      
+      <button id="btn-theme" class="btn btn-icon" title="Toggle Theme">🌓</button>
+      
+      <div class="sync-status">
+        <div id="sync-indicator" class="status-dot online"></div>
+        <span id="last-sync-time">Synced just now</span>
+        <button id="btn-refresh" class="btn btn-primary btn-sm ml-2">🔄 Refresh <span id="new-rows-badge" class="badge-hidden">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+    
+    <!-- Row 1: KPI Cards -->
+    <section class="kpi-row">
+      
+      <div class="kpi-card stat-clickable" data-stat="reviewed">
+        <div class="kpi-header">Reviewed (Done)</div>
+        <div class="kpi-value summary-green" id="stat-reviewed">-</div>
+        <div class="kpi-footer">
+          <span id="stat-rereviewed" class="badge bg-secondary">0 re-rev</span>
+          <span class="text-sm">Rate: <span id="stat-rereview-rate">0%</span></span>
+        </div>
+      </div>
+      
+      <div class="kpi-card stat-clickable" data-stat="needConfirm">
+        <div class="kpi-header">Unconfirmed (Pending) <span class="dot-red"></span></div>
+        <div class="kpi-value summary-red" id="stat-need-confirm">-</div>
+        <div class="kpi-footer text-sm">Awaiting first action</div>
+      </div>
+      
+      <div class="kpi-card stat-clickable" data-stat="unreviewed">
+        <div class="kpi-header">Unreviewed <span class="dot-amber"></span></div>
+        <div class="kpi-value summary-amber" id="stat-unreviewed">-</div>
+        <div class="kpi-footer text-sm">Confirmed, in queue</div>
+      </div>
+      
+      <div class="kpi-card stat-clickable" data-stat="total">
+        <div class="kpi-header">Total Raw Logged</div>
+        <div class="kpi-value" id="stat-total">-</div>
+        <div class="kpi-footer">
+          <span id="stat-rawdup" class="badge bg-secondary">0 dup</span>
+          <span class="badge bg-red hidden" id="stat-tagmismatch">0 mismatches</span>
+        </div>
+      </div>
+
+      <div class="kpi-card stat-clickable" data-stat="slabreach">
+        <div class="kpi-header">SLA Breach (>4h)</div>
+        <div class="kpi-value" id="stat-sla-pct">-%</div>
+        <div class="kpi-footer text-sm"><span id="stat-sla-count">0</span> items missed SLA</div>
+      </div>
+
+      <div class="kpi-card double-width">
+        <div class="time-stats-grid">
+          <div>
+            <div class="metric-label">Avg Review</div>
+            <div class="metric-val" id="stat-avg-hours">-</div>
+          </div>
+          <div>
+            <div class="metric-label">Median Review</div>
+            <div class="metric-val" id="stat-median-hours">-</div>
+          </div>
+          <div class="velocity-box">
+            <div class="metric-label">Velocity</div>
+            <div class="metric-val"><span id="stat-velocity">-</span> <span class="text-sm">rev/d</span></div>
+            <div class="velocity-trend" id="stat-velocity-trend">...</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Row 2: Health & Risk -->
+    <section class="grid-2col">
+      <!-- Health Summary -->
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2>🏥 Health Summary</h2>
+          <span class="text-sm text-secondary">Based on current range</span>
+        </div>
+        <div class="panel-body health-grid" id="health-container">
+          <div class="loading">Loading health data...</div>
+        </div>
+      </div>
+
+      <!-- Risk Teams Table -->
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2>🔥 Top Risk Teams</h2>
+          <button class="btn btn-sm btn-secondary" onclick="document.getElementById('weights-modal').showModal()">⚙️ Tweak Weights</button>
+        </div>
+        <div class="panel-body">
+          <div class="table-container fade-bottom">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>Risk Score</th>
+                  <th style="width: 50%">Intensity</th>
+                </tr>
+              </thead>
+              <tbody id="risk-tbody">
+                <tr><td colspan="3" class="text-center">Loading risk scores...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 3: Pending Queues -->
+    <section class="grid-2col">
+      <!-- Unreviewed (Confirmed) -->
+      <div class="panel glass pending-amber">
+        <div class="panel-header">
+          <h2>⏳ Unreviewed (In Queue)</h2>
+          <span class="badge bg-amber">Confirmed, awaiting review</span>
+        </div>
+        <div class="panel-body table-container small-padding">
+          <table class="data-table compact">
+            <thead>
+              <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
+            </thead>
+            <tbody id="pending-unreviewed-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Unconfirmed (Pending) -->
+      <div class="panel glass pending-red">
+        <div class="panel-header">
+          <h2>🚨 Unconfirmed (Needs Action)</h2>
+          <span class="badge bg-red">Raw logged, zero action</span>
+        </div>
+        <div class="panel-body table-container small-padding">
+          <table class="data-table compact">
+            <thead>
+              <tr><th>Team</th><th>Count</th><th>Oldest Item</th></tr>
+            </thead>
+            <tbody id="pending-unconfirmed-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 4: Leaderboard & Funnel -->
+    <section class="grid-2col">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2>🏆 Fast Review Leaderboard</h2>
+        </div>
+        <div class="panel-body table-container small-padding">
+          <table class="data-table compact text-center">
+            <thead>
+              <tr><th>Rank</th><th class="text-left">Team</th><th>Total Reviews</th><th>Median Speed</th></tr>
+            </thead>
+            <tbody id="leaderboard-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2>📊 Conversion Funnel</h2>
+        </div>
+        <div class="panel-body funnel-container">
+          <div class="funnel-step">
+            <div class="funnel-label">Raw Logged</div>
+            <div class="funnel-bar bg-blue" id="funnel-raw-bar" style="width: 100%">
+              <span id="funnel-raw-count">-</span> (100%)
+            </div>
+          </div>
+          <div class="funnel-arrow">↓ <span id="funnel-c-rate" class="rate-badge">-</span></div>
+          <div class="funnel-step">
+            <div class="funnel-label">Confirmed</div>
+            <div class="funnel-bar bg-amber" id="funnel-confirm-bar" style="width: 0%">
+              <span id="funnel-confirm-count">-</span> (<span id="funnel-confirm-pct">-</span>)
+            </div>
+          </div>
+          <div class="funnel-arrow">↓ <span id="funnel-r-rate" class="rate-badge">-</span></div>
+          <div class="funnel-step">
+            <div class="funnel-label">Reviewed</div>
+            <div class="funnel-bar bg-green" id="funnel-review-bar" style="width: 0%">
+              <span id="funnel-review-count">-</span> (<span id="funnel-review-pct">-</span>)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 5: Charts -->
+    <section class="charts-row">
+      <div class="panel glass">
+        <div class="panel-header"><h2>Daily Reviews & Backlog</h2></div>
+        <div class="chart-container">
+          <canvas id="chart-daily"></canvas>
+        </div>
+      </div>
+      <div class="panel glass">
+        <div class="panel-header"><h2>Review Time Distribution</h2></div>
+        <div class="chart-container">
+          <canvas id="chart-dist"></canvas>
+        </div>
+      </div>
+      <div class="panel glass">
+        <div class="panel-header"><h2>SLA Compliance (%)</h2></div>
+        <div class="chart-container">
+          <canvas id="chart-sla"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils/format.js"></script>
+  <script src="/js/utils/palette.js"></script>
+  <script src="/js/utils/charts.js"></script>
+  <script src="/js/sections/stats.js"></script>
+  <script src="/js/sections/health.js"></script>
+  <script src="/js/sections/risk.js"></script>
+  <script src="/js/sections/pending.js"></script>
+  <script src="/js/sections/leaderboard.js"></script>
+  <script src="/js/sections/trends.js"></script>
+  <script src="/js/drilldown.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

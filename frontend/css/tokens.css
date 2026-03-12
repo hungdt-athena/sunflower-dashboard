@@ -1,0 +1,50 @@
+:root {
+  /* Brand Colors */
+  --sunflower-yellow: #f59e0b;
+  --sunflower-light: #fbbf24;
+  
+  /* Backgrounds */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-panel: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --border-glass: rgba(255, 255, 255, 0.5);
+  
+  /* Text */
+  --text-main: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-amber: #f59e0b;
+  --color-amber-bg: rgba(245, 158, 11, 0.1);
+  --color-red: #ef4444;
+  --color-red-bg: rgba(239, 68, 68, 0.1);
+  --color-blue: #3b82f6;
+  
+  /* Radii & Shadows */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+  --shadow-float: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+.dark-mode {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-panel: #1e293b;
+  --bg-glass: rgba(15, 23, 42, 0.75);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+  --shadow-float: 0 20px 25px -5px rgba(0,0,0,0.5);
+}
