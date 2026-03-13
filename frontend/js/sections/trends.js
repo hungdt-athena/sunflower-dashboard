@@ -306,17 +306,16 @@ const TrendsSection = {
     const ctx = canvas.getContext('2d');
     if (this.charts.cycle) this.charts.cycle.destroy();
 
-    // Sort teams by total cycle time descending (highest on top for horizontal bar)
+    // Sort teams by total cycle time descending (highest on the left for vertical bar)
     const sorted = [...data].sort((a, b) => {
       const totalA = (a.avg_pending_hours || 0) + (a.avg_confirmed_hours || 0);
       const totalB = (b.avg_pending_hours || 0) + (b.avg_confirmed_hours || 0);
-      return totalA - totalB; // ascending so highest is at top in horizontal bar
+      return totalB - totalA; // descending
     });
 
-    // Adjust container height dynamically based on the number of teams
+    // Reset container height from horizontal logic
     const container = canvas.parentElement;
-    const calculatedHeight = Math.max(300, sorted.length * 48);
-    container.style.height = `${calculatedHeight}px`;
+    container.style.height = '';
 
     this.charts.cycle = new Chart(ctx, {
       type: 'bar',
@@ -336,7 +335,6 @@ const TrendsSection = {
         ]
       },
       options: {
-        indexAxis: 'y',
         maintainAspectRatio: false,
         plugins: {
           legend: { position: 'bottom' },
@@ -344,15 +342,15 @@ const TrendsSection = {
             callbacks: {
               title: (items) => `Team: ${items[0].label}`,
               footer: (items) => {
-                const total = items.reduce((s, i) => s + i.parsed.x, 0);
+                const total = items.reduce((s, i) => s + i.parsed.y, 0);
                 return `Total: ${total}h`;
               }
             }
           }
         },
         scales: {
-          x: { stacked: true, title: { display: true, text: 'Hours' } },
-          y: { stacked: true }
+          x: { stacked: true },
+          y: { stacked: true, title: { display: true, text: 'Hours' } }
         }
       }
     });

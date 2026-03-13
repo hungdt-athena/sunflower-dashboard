@@ -56,6 +56,7 @@ body {
 /* Dashboard Tables */
 .table-container {
   width: 100%;
+  overflow: visible;
 }
 .data-table { 
   width: 100%; 
@@ -195,7 +196,7 @@ body {
   font-weight: 500;
   white-space: normal;
   width: 200px;
-  z-index: 9999;
+  z-index: 99999;
   box-shadow: 0 8px 24px rgba(0,0,0,0.18);
   transition: opacity 0.18s, transform 0.18s;
   pointer-events: none;
@@ -246,9 +247,12 @@ body {
   flex-direction: column;
   gap: 0.6rem;
   transition: box-shadow 0.15s, border-color 0.15s;
+  overflow: visible;
+  position: relative;
 }
 .health-card:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  z-index: 20;
 }
 
 /* Left accent per card type */
@@ -353,3 +357,33 @@ body {
 
 /* Badge green variant (for health stale items clear state) */
 .bg-green { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+/* ==========================================
+   TOOLTIP OVERFLOW SAFETY — prevent clipping
+   ========================================== */
+/* Health grid container must not clip tooltips */
+#health-container {
+  overflow: visible;
+}
+
+/* Health card header needs overflow visible for inline tooltips */
+.health-card-header {
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
+/* Data table thead must let tooltip escape */
+.data-table thead {
+  overflow: visible;
+}
+.data-table th {
+  overflow: visible;
+  position: relative;
+}
+
+/* Risk / Pending table parent wrappers — tooltip must escape scroll container */
+.data-table td,
+.data-table tr {
+  overflow: visible;
+}
