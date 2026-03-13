@@ -31,7 +31,7 @@ const API = {
   async getPending(t) { return this.fetchJSON('/pending', { team: t }); },
   async getLeaderboard(r) { return this.fetchJSON('/leaderboard', { range: r }); },
   async getFunnel(t,r){ return this.fetchJSON('/funnel', { team: t, range: r }); },
-  async getTrends(t,d){ return this.fetchJSON('/trends', { team: t, days: d }); },
+  async getTrends(t,r){ return this.fetchJSON('/trends', { team: t, range: r }); },
   
   async getRows(args) { return this.fetchJSON('/rows', args); },
 

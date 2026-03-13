@@ -386,15 +386,16 @@ function getPending(team) {
 
 // ─── Trends ────────────────────────────────────────────
 
-function getTrends(team, days = 30) {
+function getTrends(team, range) {
   const tf = teamFilter(team);
+  const rf = dateRangeFilter(range);
 
   // Daily review counts
   const dailyReviews = db.prepare(`
     SELECT date(logged_at) as day, COUNT(*) as count
     FROM logs 
     WHERE is_deleted = 0 AND type = 'reviewed' 
-    AND logged_at >= datetime('now', '-${days} days') ${tf}
+    ${rf} ${tf}
     GROUP BY date(logged_at) ORDER BY day
   `).all();
 
@@ -406,7 +407,7 @@ function getTrends(team, days = 30) {
       ROUND(SUM(CASE WHEN is_sla_breach = 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as compliance_pct
     FROM logs
     WHERE is_deleted = 0 AND type = 'reviewed' AND review_hours IS NOT NULL
-    AND logged_at >= datetime('now', '-${days} days') ${tf}
+    ${rf} ${tf}
     GROUP BY date(logged_at) ORDER BY day
   `).all();
 
@@ -415,7 +416,7 @@ function getTrends(team, days = 30) {
     SELECT date(logged_at) as day, COUNT(*) as count
     FROM logs 
     WHERE is_deleted = 0 AND type = 'raw'
-    AND logged_at >= datetime('now', '-${days} days') ${tf}
+    ${rf} ${tf}
     GROUP BY date(logged_at) ORDER BY day
   `).all();
 
@@ -432,7 +433,7 @@ function getTrends(team, days = 30) {
       COUNT(*) as count
     FROM logs
     WHERE is_deleted = 0 AND type = 'reviewed' AND review_hours IS NOT NULL
-    AND logged_at >= datetime('now', '-${days} days') ${tf}
+    ${rf} ${tf}
     GROUP BY bucket
   `).all();
 
@@ -443,11 +444,41 @@ function getTrends(team, days = 30) {
       AVG(CASE WHEN status='confirmed' THEN (julianday('now') - julianday(logged_at))*24 ELSE null END) as avg_confirmed_hours
     FROM logs
     WHERE is_deleted = 0 AND type = 'raw' AND status IN ('pending', 'confirmed') AND team != '' AND team IS NOT NULL
-    ${team !== 'all' ? `AND team = '${team}'` : ''}
+    ${tf} ${rf}
     GROUP BY team
   `).all();
 
-  return { dailyReviews, dailySla, dailyRaw, reviewTimeDist, cycleTimeByTeam };
+  // Pie chart: Meeting Distribution by Team
+  const teamDistribution = db.prepare(`
+    SELECT team, COUNT(*) as count
+    FROM logs
+    WHERE is_deleted = 0 AND type = 'raw' 
+    ${rf} AND team != '' AND team IS NOT NULL
+    GROUP BY team ORDER BY count DESC
+  `).all();
+
+  // Stacked Bar: Meeting Status Breakdown by Team
+  const teamStatusStacked = db.prepare(`
+    SELECT team,
+      SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as unconfirmed,
+      SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) as unreviewed,
+      SUM(CASE WHEN status = 'reviewed' THEN 1 ELSE 0 END) as reviewed
+    FROM logs
+    WHERE is_deleted = 0 AND type = 'raw' AND status IN ('pending', 'confirmed', 'reviewed')
+    ${rf} AND team != '' AND team IS NOT NULL
+    GROUP BY team 
+    ORDER BY reviewed DESC, unreviewed DESC, unconfirmed DESC
+  `).all();
+
+  return { 
+    dailyReviews, 
+    dailySla, 
+    dailyRaw, 
+    reviewTimeDist, 
+    cycleTimeByTeam, 
+    teamDistribution, 
+    teamStatusStacked 
+  };
 }
 
 // ─── Leaderboard ───────────────────────────────────────

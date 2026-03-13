@@ -6,20 +6,110 @@ const TrendsSection = {
   },
 
   async render(team, range) {
-    let days = 30; // default for 'all' or '30d'
-    if (range === '7d') days = 7;
-    if (range === '3d') days = 3;
-    if (range === 'today') days = 1;
+    const trends = await API.getTrends(team, range);
 
-    const [trends] = await Promise.all([
-      API.getTrends(team, days)
-    ]);
+    const allTeamsContainer = document.getElementById('all-teams-charts');
+    const dailyChartsContainer = document.getElementById('daily-trend-charts');
 
-    this.renderDailyChart(trends);
-    this.renderSlaChart(trends.dailySla);
-    this.renderCycleTimeChart(trends.cycleTimeByTeam);
-    this.renderDistChart(trends.reviewTimeDist);
+    if (team === 'all') {
+      allTeamsContainer.classList.remove('hidden');
+      this.renderPieChart(trends.teamDistribution);
+      this.renderStackedChart(trends.teamStatusStacked);
+    } else {
+      allTeamsContainer.classList.add('hidden');
+    }
+
+    if (range === 'today') {
+      dailyChartsContainer.classList.add('hidden');
+    } else {
+      dailyChartsContainer.classList.remove('hidden');
+      this.renderDailyChart(trends);
+      this.renderSlaChart(trends.dailySla);
+      this.renderCycleTimeChart(trends.cycleTimeByTeam);
+      this.renderDistChart(trends.reviewTimeDist);
+    }
   },
+
+  renderPieChart(data) {
+    const ctx = document.getElementById('chart-pie-dist').getContext('2d');
+    if (this.charts.pie) this.charts.pie.destroy();
+
+    this.charts.pie = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: data.map(d => d.team),
+        datasets: [{
+          data: data.map(d => d.count),
+          backgroundColor: data.map(d => Palette.getTeamColor(d.team)),
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }]
+      },
+      options: {
+        cutout: '60%',
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+  },
+
+  renderStackedChart(data) {
+    const ctx = document.getElementById('chart-status-stacked').getContext('2d');
+    if (this.charts.stacked) this.charts.stacked.destroy();
+
+    this.charts.stacked = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(d => d.team),
+        datasets: [
+          {
+            label: 'Unconfirmed',
+            data: data.map(d => d.unconfirmed),
+            backgroundColor: '#fb7185' // rose-400
+          },
+          {
+            label: 'Unreviewed',
+            data: data.map(d => d.unreviewed),
+            backgroundColor: '#fbbf24' // amber-400
+          },
+          {
+            label: 'Reviewed',
+            data: data.map(d => d.reviewed),
+            backgroundColor: '#34d399' // emerald-400
+          }
+        ]
+      },
+      options: {
+        indexAxis: 'x',
+        plugins: {
+          legend: { position: 'bottom' },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const total = ctx.dataset.data.reduce((a,b) => a+b, 0); // Need total for the team
+                return `${ctx.dataset.label}: ${ctx.raw}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, max: 100 } // Wait, user said 100% stacked
+        }
+      }
+    });
+
+    // To make it 100% stacked, we actually need to calculate percentages
+    // Let's modify data arrays
+    const totals = data.map(d => (d.unconfirmed + d.unreviewed + d.reviewed) || 1);
+    
+    this.charts.stacked.data.datasets[0].data = data.map((d, i) => Math.round((d.unconfirmed / totals[i]) * 100));
+    this.charts.stacked.data.datasets[1].data = data.map((d, i) => Math.round((d.unreviewed / totals[i]) * 100));
+    this.charts.stacked.data.datasets[2].data = data.map((d, i) => Math.round((d.reviewed / totals[i]) * 100));
+    this.charts.stacked.update();
+  },
+
 
   renderDailyChart(data) {
     const ctx = document.getElementById('chart-daily').getContext('2d');

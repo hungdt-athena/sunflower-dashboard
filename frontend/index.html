@@ -113,10 +113,6 @@
             <span class="material-symbols-outlined text-[20px] group-hover:text-primary">health_and_safety</span>
             <p class="text-sm font-semibold group-hover:text-primary transition-colors">Health & Risk</p>
         </button>
-        <button class="nav-tab-btn w-full items-center flex gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer group border border-transparent" data-tab="tab-charts">
-            <span class="material-symbols-outlined text-[20px] group-hover:text-primary">show_chart</span>
-            <p class="text-sm font-semibold group-hover:text-primary transition-colors">Trend Charts</p>
-        </button>
     </nav>
   </aside>
 
@@ -338,6 +334,64 @@
              </div>
           </div>
           <!-- Right side is deliberately left empty, but gives natural padding to conversion funnel -->
+        <div id="all-teams-charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 hidden">
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+              Meeting Distribution (Team)
+            </h3>
+            <div class="relative flex-1 w-full min-h-[300px]">
+              <canvas id="chart-pie-dist"></canvas>
+            </div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+              Status Breakdown (100% Stacked)
+            </h3>
+            <div class="relative flex-1 w-full min-h-[300px]">
+              <canvas id="chart-status-stacked"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div id="daily-trend-charts" class="mt-8 space-y-8 hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+              <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+                Review Volume vs Backlog
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Lượng meeting đổ vào và được review xong.</span></span>
+              </h3>
+              <div class="relative flex-1 w-full min-h-[300px]">
+                <canvas id="chart-daily"></canvas>
+              </div>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+              <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+                SLA Compliance Trend
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tỉ lệ hoàn thành đúng hạn SLA.</span></span>
+              </h3>
+              <div class="relative flex-1 w-full min-h-[300px]">
+                <canvas id="chart-sla"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+              <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+                Cycle Time Breakdown
+              </h3>
+              <div class="relative flex-1 w-full min-h-[300px]">
+                <canvas id="chart-cycle-time"></canvas>
+              </div>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+              <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+                Review Time Distribution
+              </h3>
+              <div class="relative flex-1 w-full min-h-[300px]">
+                <canvas id="chart-dist"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -449,50 +503,6 @@
           </div>
         </div>
 
-      </div>
-
-      <!-- TAB 3: Charts -->
-      <div id="tab-charts" class="tab-pane space-y-8 hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Review Volume vs Backlog
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Lượng meeting đổ vào và được review xong (Area Chart).</span></span>
-            </h3>
-            <div class="relative flex-1 w-full min-h-[300px]">
-              <canvas id="chart-daily"></canvas>
-            </div>
-          </div>
-          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              SLA Compliance Trend
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tỉ lệ hoàn thành đúng hạn SLA theo thời gian.</span></span>
-            </h3>
-            <div class="relative flex-1 w-full min-h-[300px]">
-              <canvas id="chart-sla"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Cycle Time Breakdown
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Phân rã thời gian nút thắt hiện tại theo team (Stacked Bar).</span></span>
-            </h3>
-            <div class="relative flex-1 w-full min-h-[300px]">
-              <canvas id="chart-cycle-time"></canvas>
-            </div>
-          </div>
-          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
-            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Review Time Distribution
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Phân loại vòng đời hoàn thành đánh giá.</span></span>
-            </h3>
-            <div class="relative flex-1 w-full min-h-[300px]">
-              <canvas id="chart-dist"></canvas>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
