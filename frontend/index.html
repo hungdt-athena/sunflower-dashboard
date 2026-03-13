@@ -155,6 +155,12 @@
           <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="30d">30D</button>
           <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="all">All Time</button>
        </div>
+       
+       <div class="tooltip-wrapper text-slate-500 text-[13px] font-medium flex items-center gap-1.5 cursor-help hidden sm:flex bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg h-[34px]">
+         <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+         <span id="date-range-text">--/--/----</span>
+         <span class="tooltip-content z-50">Khoảng thời gian đang lọc (định dạng: dd/MM/yyyy)</span>
+       </div>
 
        <!-- Team Filter (Visible only on KPIs Tab) -->
        <div id="filter-team-container" class="flex items-center border border-slate-200 bg-white rounded-lg h-[34px] shadow-sm overflow-hidden px-2 transition-opacity">
@@ -261,10 +267,11 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative z-10">
             <div class="flex flex-col items-center justify-center p-2">
               <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Avg Review
+                <span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Average Review
                 <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Thời gian trung bình để xử lý xong một đánh giá (Review).</span></span>
               </p>
               <p class="text-4xl font-bold text-slate-800" id="stat-avg-hours">-</p>
+              <div class="mt-2 text-[11px] font-bold uppercase tracking-wider" id="stat-avg-trend"></div>
             </div>
             <div class="flex flex-col items-center justify-center p-2">
               <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
@@ -293,7 +300,7 @@
           <div class="flex flex-col">
              <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
                 <span class="material-symbols-outlined text-blue-500 text-[20px]">filter_alt</span>
-                Conversion Funnel
+                Meeting Funnel
                 <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Tỉ lệ chuyển đổi ở các bước: Meeting thô -> Khớp Team -> Hoàn thành.</span></span>
              </h3>
              <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">

@@ -552,32 +552,67 @@ function getRows(filters = {}) {
   return { rows, total, page, limit, totalPages: Math.ceil(total / limit) };
 }
 
-// ─── Velocity Comparison (this week vs last week) ──────
+// ─── Performance Comparison ──────────────────────────────
 
-function getVelocityComparison(team) {
+function getPerformanceComparison(team, range) {
+  if (range === '3d' || range === 'all') return null;
+
   const tf = teamFilter(team);
+  let currentRangeSql = '';
+  let prevRangeSql = '';
+  let days = 1;
+  let label = '';
 
-  const thisWeek = db.prepare(`
-    SELECT COUNT(*) as v FROM logs 
-    WHERE is_deleted = 0 AND type = 'reviewed' ${tf}
-    AND logged_at >= datetime('now', '-7 days')
-  `).get().v;
+  if (range === 'today') {
+    currentRangeSql = "AND date(logged_at) = date('now')";
+    prevRangeSql = "AND date(logged_at) = date('now', '-1 day')";
+    days = 1;
+    label = 'vs yesterday';
+  } else if (range === '7d') {
+    currentRangeSql = "AND logged_at >= datetime('now', '-7 days')";
+    prevRangeSql = "AND logged_at >= datetime('now', '-14 days') AND logged_at < datetime('now', '-7 days')";
+    days = 7;
+    label = 'vs LW';
+  } else if (range === '30d') {
+    currentRangeSql = "AND logged_at >= datetime('now', '-30 days')";
+    prevRangeSql = "AND logged_at >= datetime('now', '-60 days') AND logged_at < datetime('now', '-30 days')";
+    days = 30;
+    label = 'vs LM';
+  } else {
+    return null;
+  }
 
-  const lastWeek = db.prepare(`
-    SELECT COUNT(*) as v FROM logs 
-    WHERE is_deleted = 0 AND type = 'reviewed' ${tf}
-    AND logged_at >= datetime('now', '-14 days')
-    AND logged_at < datetime('now', '-7 days')
-  `).get().v;
+  const current = db.prepare(`
+    SELECT COUNT(*) as v, AVG(review_hours) as avg_h
+    FROM logs 
+    WHERE is_deleted = 0 AND type = 'reviewed' ${tf} ${currentRangeSql}
+  `).get();
 
-  const change = lastWeek > 0 ? ((thisWeek - lastWeek) / lastWeek * 100) : (thisWeek > 0 ? 100 : 0);
+  const prev = db.prepare(`
+    SELECT COUNT(*) as v, AVG(review_hours) as avg_h
+    FROM logs 
+    WHERE is_deleted = 0 AND type = 'reviewed' ${tf} ${prevRangeSql}
+  `).get();
+
+  const currentCount = current.v;
+  const prevCount = prev.v;
+  const currentAvg = current.avg_h;
+  const prevAvg = prev.avg_h;
+
+  const velocityChange = prevCount > 0 ? ((currentCount - prevCount) / prevCount * 100) : (currentCount > 0 ? 100 : 0);
+  
+  let avgReviewChange = null;
+  if (prevAvg != null && currentAvg != null && prevAvg > 0) {
+      avgReviewChange = ((currentAvg - prevAvg) / prevAvg) * 100;
+  } else if (prevAvg == null && currentAvg != null) {
+      avgReviewChange = 100;
+  }
 
   return {
-    thisWeek,
-    lastWeek,
-    velocityPerDay: Math.round(thisWeek / 7 * 100) / 100,
-    changePct: Math.round(change * 100) / 100,
-    direction: change > 0 ? 'up' : change < 0 ? 'down' : 'flat',
+    velocityPerDay: Math.round((currentCount / days) * 100) / 100,
+    velocityChange: Math.round(velocityChange * 100) / 100,
+    avgReviewChange: avgReviewChange !== null ? Math.round(avgReviewChange * 100) / 100 : null,
+    label
   };
 }
 
@@ -593,7 +628,7 @@ module.exports = {
   getFunnel,
   getHeatmap,
   getRows,
-  getVelocityComparison,
+  getPerformanceComparison,
   dateRangeFilter,
   teamFilter,
 };

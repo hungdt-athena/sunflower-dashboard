@@ -46,12 +46,30 @@ const StatsSection = {
 
     if (data.velocity) {
       this.elements.velocity.textContent = data.velocity.velocityPerDay;
-      const t = data.velocity.changePct;
-      let trendStr = 'Flat';
-      let cls = 'text-muted';
-      if (t > 0) { trendStr = `↑ +${t}% vs LW`; cls = 'trend-up'; }
-      if (t < 0) { trendStr = `↓ ${t}% vs LW`; cls = 'trend-down'; }
-      this.elements.velocityTrend.innerHTML = `<span class="${cls}">${trendStr}</span>`;
+      const vt = data.velocity.velocityChange;
+      const vr = data.velocity.avgReviewChange;
+      const label = data.velocity.label;
+      
+      let vStr = 'Flat';
+      let vCls = 'text-slate-400';
+      if (vt > 0) { vStr = `↑ +${vt}% ${label}`; vCls = 'text-emerald-500'; }
+      if (vt < 0) { vStr = `↓ ${vt}% ${label}`; vCls = 'text-rose-500'; }
+      this.elements.velocityTrend.innerHTML = `<span class="${vCls}">${vStr}</span>`;
+
+      const avgTrendEl = document.getElementById('stat-avg-trend');
+      if (avgTrendEl && vr !== null && vr !== undefined) {
+        let rStr = 'Flat';
+        let rCls = 'text-slate-400';
+        if (vr > 0) { rStr = `↑ +${vr}% ${label}`; rCls = 'text-rose-500'; }
+        if (vr < 0) { rStr = `↓ ${vr}% ${label}`; rCls = 'text-emerald-500'; }
+        avgTrendEl.innerHTML = `<span class="${rCls}">${rStr}</span>`;
+      } else if (avgTrendEl) {
+        avgTrendEl.innerHTML = '';
+      }
+    } else {
+      this.elements.velocityTrend.innerHTML = '';
+      const avgTrendEl = document.getElementById('stat-avg-trend');
+      if (avgTrendEl) avgTrendEl.innerHTML = '';
     }
   }
 };

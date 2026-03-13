@@ -118,6 +118,7 @@ window.appData = {
     document.body.style.cursor = 'wait';
     
     try {
+      this.updateDateRangeLabel();
       await Promise.all([
         StatsSection.render(team, range),
         HealthSection.render(range),
@@ -132,6 +133,31 @@ window.appData = {
     } finally {
       document.body.style.cursor = 'default';
     }
+  },
+
+  updateDateRangeLabel() {
+    const range = this.state.range;
+    const today = new Date();
+    const fmt = (d) => {
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    };
+
+    let text = '';
+    if (range === 'today') {
+      text = fmt(today);
+    } else if (range === 'all') {
+      text = 'All Time';
+    } else {
+      const days = parseInt(range) || 7;
+      const past = new Date(today);
+      past.setDate(today.getDate() - days);
+      text = `${fmt(past)} - ${fmt(today)}`;
+    }
+    const labelEl = document.getElementById('date-range-text');
+    if (labelEl) labelEl.textContent = text;
   },
 
   renderSection(name) {
