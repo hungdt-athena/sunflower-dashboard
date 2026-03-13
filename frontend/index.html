@@ -155,7 +155,7 @@
        <div class="tooltip-wrapper text-slate-500 text-[13px] font-medium flex items-center gap-1.5 cursor-help bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg h-[34px]">
          <span class="material-symbols-outlined text-[16px]">calendar_month</span>
          <span id="date-range-text">--/--/----</span>
-         <span class="tooltip-content z-50">Khoảng thời gian đang lọc (định dạng: dd/MM/yyyy)</span>
+         <span class="tooltip-content z-50">Current time range filter</span>
        </div>
 
        <!-- Team Filter (Visible only on KPIs Tab) -->
@@ -439,7 +439,7 @@
           <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
             Health Parameters
-            <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tình hình sức khoẻ của từng team: tồn đọng, vi phạm SLA, khoảng cách benchmark...</span></span>
+            <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Health status of each team: backlog, SLA breaches, benchmark gaps...</span></span>
           </h3>
           <div id="health-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             <div class="loading text-slate-500 text-sm col-span-4">Loading health parameters...</div>
@@ -453,8 +453,8 @@
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
-                Most Unreviewed by Team
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Danh sách team tồn đọng reviews nhiều nhất, sắp xếp từ cao tới thấp. Worst-case SLA của mỗi team được hiển thị.</span></span>
+                Unreviewed Queue
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">List of teams with the largest review backlogs, sorted descending.</span></span>
               </h3>
               <span class="badge bg-amber">Confirmed</span>
             </div>
@@ -474,7 +474,7 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
                 Most Unconfirmed by Team
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Danh sách team có nhiều meetings thô chưa được xác nhận nhất, sắp xếp từ cao tới thấp.</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">List of teams with the most unconfirmed raw meetings, sorted descending.</span></span>
               </h3>
               <span class="badge bg-red">Raw</span>
             </div>
@@ -497,10 +497,10 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">warning</span>
                 Top Risk Teams
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Cảnh báo rủi ro trễ hẹn xếp theo tính nghiêm trọng của team.</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Overdue risk warnings ranked by team severity.</span></span>
               </h3>
               <button class="btn-tweak-weights" onclick="document.getElementById('weights-modal').showModal()">
-                <span class="material-symbols-outlined" style="font-size: 16px;">tune</span> Căn chỉnh Trọng số
+                <span class="material-symbols-outlined" style="font-size: 16px;">tune</span> Tweak Weights
               </button>
             </div>
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
@@ -511,13 +511,13 @@
                     <th class="text-right">
                       <span class="tooltip-wrapper tooltip-bottom" style="margin-left:0">Score
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
-                        <span class="tooltip-content" style="white-space:pre-line;width:220px">Risk score tổng hợp từ nhiều chỉ số (SLA breach, unconfirmed, unreviewed, avg hours, re-review rate). Score càng cao = rủi ro càng lớn.</span>
+                        <span class="tooltip-content" style="white-space:pre-line;width:220px">Composite risk score from multiple metrics (SLA breach, unconfirmed, unreviewed, avg hours, re-review rate). Higher score = greater risk.</span>
                       </span>
                     </th>
                     <th class="text-right" style="width: 45%">
                       <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0">Intensity
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
-                        <span class="tooltip-content">Chiều dài bar thể hiện tỉ lệ score của team so với team có score cao nhất.</span>
+                        <span class="tooltip-content">Bar length represents the team's score ratio compared to the highest scoring team.</span>
                       </span>
                     </th>
                   </tr>
@@ -535,7 +535,7 @@
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-yellow-500 text-[20px]">emoji_events</span>
                 Fast Review Leaderboard
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Vinh danh các đội nhóm có tốc độ đánh giá các meeting nhanh nhất.</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Recognizes teams with the fastest meeting review speeds.</span></span>
               </h3>
             </div>
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
@@ -549,7 +549,7 @@
                     <th class="text-right">
                       <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0">Consistency
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
-                        <span class="tooltip-content">Consistency Score = độ ổn định về tốc độ review. Score thấp hơn = ổn định hơn (CV thấp). Score trong ngoặc là điểm tổng hợp (median + consistency).</span>
+                        <span class="tooltip-content">Consistency Score = stability of review speed. Lower score = more stable (lower CV). The score in brackets is the composite score (median + consistency).</span>
                       </span>
                     </th>
                   </tr>

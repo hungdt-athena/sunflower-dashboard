@@ -69,8 +69,8 @@ const RiskSection = {
         }
       }
 
-      const scoreTooltip = `Risk score tổng hợp từ:\n• SLA breach weight\n• Unconfirmed meetings\n• Unreviewed meetings\n• Avg review hours\n• Re-review rate\n\nScore càng cao = rủi ro càng lớn`;
-      const intensityTooltip = `Tỉ lệ rủi ro của team so với team có điểm cao nhất.\n\n${score.toFixed(1)} / ${maxScore.toFixed(1)} = ${wPct.toFixed(0)}%`;
+      const scoreTooltip = `Composite risk score based on:\n• SLA breach weight\n• Unconfirmed meetings\n• Unreviewed meetings\n• Avg review hours\n• Re-review rate\n\nHigher score = greater risk`;
+      const intensityTooltip = `Team's risk ratio compared to the highest scoring team.\n\n${score.toFixed(1)} / ${maxScore.toFixed(1)} = ${wPct.toFixed(0)}%`;
 
       // Build Segmented UI
       const segmentCount = 10;

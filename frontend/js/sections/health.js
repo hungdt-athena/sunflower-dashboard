@@ -34,21 +34,21 @@ const HealthSection = {
     html += renderCard('Most Unconfirmed', '🚨', 'hcard-amber',
       unc && unc.length ? unc.map(i => teamBadge(typeof i === 'string' ? i : i.team, typeof i === 'string' ? null : Object.values(i)[1], 'hbadge-amber')).join('') : null,
       !unc || !unc.length,
-      'Các team có nhiều meetings chưa được xác nhận nhất. Con số trong ngoặc là số lượng meetings cần confirm.');
+      'Teams with the most unconfirmed meetings. The number in brackets is the count of meetings needing confirmation.');
 
     // Most Unreviewed (Warning)
     const unr = data.mostUnreviewed;
     html += renderCard('Most Unreviewed', '⏳', 'hcard-amber',
       unr && unr.length ? unr.map(i => teamBadge(typeof i === 'string' ? i : i.team, typeof i === 'string' ? null : Object.values(i)[1], 'hbadge-amber')).join('') : null,
       !unr || !unr.length,
-      'Các team tồn đọng reviews nhiều nhất. Con số trong ngoặc là số items chờ review.');
+      'Teams with the largest backlog of reviews. The number in brackets is the count of items waiting for review.');
 
     // High SLA >20% (Critical, Larger Card)
     const sla = data.highSla;
     html += renderCard('High SLA >20%', '📊', 'hcard-red',
       sla && sla.length ? sla.map(i => teamBadge(i.team, `${Format.number(i.pct)}%`, 'hbadge-red')).join('') : null,
       !sla || !sla.length,
-      'Các team có tỉ lệ vi phạm SLA (>4h) vượt 20%. Phần trăm cho biết % reviews vượt SLA.',
+      'Teams with an SLA breach rate (>4h) exceeding 20%. The percentage indicates the proportion of reviews over SLA.',
       'md:col-span-2 shadow-sm bg-rose-50/10'
     );
 
@@ -57,14 +57,14 @@ const HealthSection = {
     html += renderCard('Potential Breachers (SLA >80%)', '⚠️', 'hcard-red',
       br && br.length ? br.map(i => teamBadge(typeof i === 'string' ? i : i.team, null, 'hbadge-red')).join('') : null,
       !br || !br.length,
-      'Các team có tỉ lệ vi phạm SLA trên 80% — cần can thiệp gấp.');
+      'Teams with an SLA breach rate over 80% — urgent intervention required.');
 
     // Gaps vs Benchmark (Warning, icon arrows)
     const gaps = data.benchmarkGaps;
     html += renderCard('Gaps vs Benchmark', '📉', 'hcard-amber',
       gaps && gaps.length ? gaps.map(i => teamBadge(i.team, `<span class="material-symbols-outlined text-[10px] align-middle">arrow_upward</span> ${i.gapPct}%`, 'hbadge-amber')).join('') : null,
       !gaps || !gaps.length,
-      'So sánh tốc độ review trung bình của team với benchmark toàn hệ thống. Phần trăm cho biết team chậm hơn bao nhiêu.');
+      "Compares the team's average review speed against the system benchmark. The percentage shows how much slower the team is.");
 
     // Critical Teams
     const isCritical = data.critical && data.critical.length > 0;
@@ -73,14 +73,14 @@ const HealthSection = {
         ? data.critical.map(t => teamBadge(t, null, 'hbadge-red')).join('')
         : '<span class="health-all-clear">✅ All clear</span>',
       false,
-      'Các team đang ở mức rủi ro nghiêm trọng, cần ưu tiên xử lý ngay.');
+      'Teams at a critical risk level, requiring immediate attention.');
 
     // No Reviews
     const noRev = data.noReviews;
     html += renderCard('No Reviews', '😴', 'hcard-slate',
       noRev && noRev.length ? noRev.map(i => teamBadge(typeof i === 'string' ? i : i.team, null, 'hbadge-slate')).join('') : null,
       !noRev || !noRev.length,
-      'Các team chưa thực hiện review nào trong khoảng thời gian đang chọn.');
+      'Teams that have not completed any reviews within the selected timeframe.');
 
     // Stale Items (Critical, Larger Card)
     const stale = data.staleItems || 0;
@@ -89,7 +89,7 @@ const HealthSection = {
         ? `<span class="health-stale-count">${stale}</span><span class="health-stale-label"> items &gt;7 days old</span>`
         : '<span class="health-all-clear">✅ No stale items</span>',
       false,
-      'Số lượng meetings đã tồn đọng quá 7 ngày chưa được xử lý.',
+      'Count of meetings that have been pending for over 7 days without processing.',
       'md:col-span-2 shadow-sm bg-rose-50/10'
     );
 
