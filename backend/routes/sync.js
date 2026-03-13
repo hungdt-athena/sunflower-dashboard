@@ -145,12 +145,25 @@ router.post('/', (req, res) => {
           inserted++;
         }
 
-        // STEP 3: Link raw↔reviewed
+        // Compute review_hours directly for 'reviewed'/'re-reviewed' rows:
+        // review_hours = reviewed.logged_at - parseDateFromStatus(reviewed.status)
+        // reviewed.status = date of the original meeting (dd/MM/yyyy HH:mm:ss)
+        // reviewed.logged_at = when this review entry was logged (= review time)
         if (row.type === 'reviewed' || row.type === 're-reviewed') {
-          linkReviewToRaw(row);
-          linked++;
-        } else if (row.type === 'raw') {
-          backfillRawToReview(row);
+          const statusDate = parseDateFromStatus(row.status);
+          if (statusDate && row.logged_at) {
+            const meetingTime = new Date(statusDate).getTime();
+            const reviewTime  = new Date(row.logged_at).getTime();
+            const reviewHours = (reviewTime - meetingTime) / (1000 * 60 * 60);
+            if (!isNaN(reviewHours) && reviewHours >= 0) {
+              stmts.updateReviewHours.run({
+                id: row.id,
+                review_hours:  Math.round(reviewHours * 100) / 100,
+                is_sla_breach: reviewHours > 4 ? 1 : 0,
+              });
+              linked++;
+            }
+          }
         }
       }
 
@@ -236,10 +249,20 @@ router.post('/full', (req, res) => {
         });
 
         if (row.type === 'reviewed' || row.type === 're-reviewed') {
-          linkReviewToRaw(row);
-          linked++;
-        } else if (row.type === 'raw') {
-          backfillRawToReview(row);
+          const statusDate = parseDateFromStatus(row.status);
+          if (statusDate && row.logged_at) {
+            const meetingTime = new Date(statusDate).getTime();
+            const reviewTime  = new Date(row.logged_at).getTime();
+            const reviewHours = (reviewTime - meetingTime) / (1000 * 60 * 60);
+            if (!isNaN(reviewHours) && reviewHours >= 0) {
+              stmts.updateReviewHours.run({
+                id: row.id,
+                review_hours:  Math.round(reviewHours * 100) / 100,
+                is_sla_breach: reviewHours > 4 ? 1 : 0,
+              });
+              linked++;
+            }
+          }
         }
       }
 

@@ -106,6 +106,12 @@ const stmts = {
     WHERE id = @id
   `),
 
+  // Compute review_hours directly from logged_at - parseDateFromStatus(status)
+  updateReviewHours: db.prepare(`
+    UPDATE logs SET review_hours = @review_hours, is_sla_breach = @is_sla_breach
+    WHERE id = @id
+  `),
+
   findReviewedByDocsUrl: db.prepare(`
     SELECT id, logged_at FROM logs
     WHERE docs_url = @docs_url AND type IN ('reviewed', 're-reviewed') AND is_deleted = 0
@@ -169,18 +175,27 @@ function getStats(team, range) {
   const rf = dateRangeFilter(range);
   const base = `FROM logs WHERE is_deleted = 0 ${tf} ${rf}`;
 
-  const reviewed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'reviewed'`).get().v;
+  // ── Meeting KPIs: all based on type='raw' status ─────────────────────
+  // total meeting = raw rows with a recognised status
+  const totalMeeting = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status IN ('pending','confirmed','reviewed')`).get().v;
+  // reviewed    = raw rows confirmed AND already reviewed
+  const reviewed    = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status = 'reviewed'`).get().v;
+  // unreviewed  = raw rows confirmed but not yet reviewed
+  const unreviewed  = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status = 'confirmed'`).get().v;
+  // needConfirm = raw rows not yet confirmed
   const needConfirm = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status = 'pending'`).get().v;
-  const unreviewed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status = 'confirmed'`).get().v;
-  const totalMeeting = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw'`).get().v;
-  const reReviewed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 're-reviewed'`).get().v;
-  const rawDup = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw-dup'`).get().v;
 
-  // Review time stats (only from rows with review_hours computed)
-  const reviewTimeBase = `FROM logs WHERE is_deleted = 0 AND type = 'reviewed' AND review_hours IS NOT NULL ${tf} ${rf}`;
-  const avgReviewTime = db.prepare(`SELECT AVG(review_hours) as v ${reviewTimeBase}`).get().v;
-  
-  // Median via subquery
+  // Supplementary counts (display only, not part of meeting totals)
+  const reReviewed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 're-reviewed'`).get().v;
+  const rawDup     = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw-dup'`).get().v;
+
+  // ── Review Time: from type='reviewed' rows ────────────────────────────
+  // review_hours = reviewed.logged_at − parseDateFromStatus(reviewed.status)
+  // (computed during sync and stored in review_hours column)
+  const reviewTimeBase = `FROM logs WHERE is_deleted = 0 AND type = 'reviewed' AND review_hours IS NOT NULL AND review_hours >= 0 ${tf} ${rf}`;
+  const avgReviewTime  = db.prepare(`SELECT AVG(review_hours) as v ${reviewTimeBase}`).get().v;
+
+  // Median via sorted rows
   const reviewTimeRows = db.prepare(`SELECT review_hours ${reviewTimeBase} ORDER BY review_hours`).all();
   let medianReviewTime = null;
   if (reviewTimeRows.length > 0) {
@@ -191,21 +206,23 @@ function getStats(team, range) {
   }
 
   const slaBreach = db.prepare(`SELECT COUNT(*) as v ${reviewTimeBase} AND is_sla_breach = 1`).get().v;
-  const slaPct = reviewed > 0 ? (slaBreach / reviewed * 100) : 0;
+  const slaTotal  = db.prepare(`SELECT COUNT(*) as v ${reviewTimeBase}`).get().v;
+  const slaPct    = slaTotal > 0 ? (slaBreach / slaTotal * 100) : 0;
 
-  // Velocity (reviews per day in range)
+  // Velocity: type='reviewed' entries per day
   let velocity = null;
   if (range !== 'all') {
     const days = { 'today': 1, '3d': 3, '7d': 7, '14d': 14, '30d': 30 }[range] || 7;
-    velocity = reviewed / days;
+    const reviewedEntries = db.prepare(`SELECT COUNT(*) as v FROM logs WHERE is_deleted = 0 AND type = 'reviewed' ${tf} ${rf}`).get().v;
+    velocity = reviewedEntries / days;
   }
 
-  // Re-review rate
-  const reReviewRate = reviewed > 0 ? (reReviewed / reviewed * 100) : 0;
+  // Re-review rate = re-reviewed / reviewed-entry rows
+  const reviewedEntries = db.prepare(`SELECT COUNT(*) as v FROM logs WHERE is_deleted = 0 AND type = 'reviewed' ${tf} ${rf}`).get().v;
+  const reReviewRate = reviewedEntries > 0 ? (reReviewed / reviewedEntries * 100) : 0;
+
   // Duplicate rate
   const dupRate = (totalMeeting + rawDup) > 0 ? (rawDup / (totalMeeting + rawDup) * 100) : 0;
-  // Tag mismatch
-  const tagMismatch = db.prepare(`SELECT COUNT(*) as v ${base} AND tag_mismatch = 1`).get().v;
 
   return {
     reviewed,
@@ -214,14 +231,13 @@ function getStats(team, range) {
     totalMeeting,
     reReviewed,
     rawDup,
-    avgReviewTime: avgReviewTime ? Math.round(avgReviewTime * 100) / 100 : null,
+    avgReviewTime:    avgReviewTime    ? Math.round(avgReviewTime    * 100) / 100 : null,
     medianReviewTime: medianReviewTime ? Math.round(medianReviewTime * 100) / 100 : null,
     slaBreach,
-    slaBreachPct: Math.round(slaPct * 100) / 100,
-    velocity: velocity ? Math.round(velocity * 100) / 100 : null,
-    reReviewRate: Math.round(reReviewRate * 100) / 100,
-    dupRate: Math.round(dupRate * 100) / 100,
-    tagMismatch,
+    slaBreachPct:  Math.round(slaPct        * 100) / 100,
+    velocity:      velocity ? Math.round(velocity * 100) / 100 : null,
+    reReviewRate:  Math.round(reReviewRate  * 100) / 100,
+    dupRate:       Math.round(dupRate       * 100) / 100,
   };
 }
 
@@ -472,16 +488,19 @@ function getFunnel(team, range) {
   const rf = dateRangeFilter(range);
   const base = `FROM logs WHERE is_deleted = 0 ${tf} ${rf}`;
 
-  const raw = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw'`).get().v;
-  const confirmed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status IN ('confirmed', 'reviewed')`).get().v;
-  const reviewed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'reviewed'`).get().v;
+  // All raw meetings with a recognised status
+  const raw      = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status IN ('pending','confirmed','reviewed')`).get().v;
+  // Confirmed = meetings confirmed (+ already reviewed, which implies confirmed)
+  const confirmed = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status IN ('confirmed','reviewed')`).get().v;
+  // Reviewed = raw meetings whose status was updated to 'reviewed'
+  const reviewed  = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status = 'reviewed'`).get().v;
 
   return {
     raw,
     confirmed,
     reviewed,
     confirmRate: raw > 0 ? Math.round(confirmed / raw * 1000) / 10 : 0,
-    reviewRate: confirmed > 0 ? Math.round(reviewed / confirmed * 1000) / 10 : 0,
+    reviewRate:  confirmed > 0 ? Math.round(reviewed / confirmed * 1000) / 10 : 0,
   };
 }
 

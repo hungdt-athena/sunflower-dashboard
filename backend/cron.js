@@ -19,51 +19,24 @@ function datesMatch(isoDate1, parsedDate2) {
   return isoDate1.substring(0, 10) === parsedDate2.substring(0, 10);
 }
 
-function linkReviewToRaw(row) {
-  if (!row.docs_url) return;
-  if (row.type !== 'reviewed' && row.type !== 're-reviewed') return;
-  const rawRow = stmts.findRawByDocsUrl.get({ docs_url: row.docs_url });
-  if (!rawRow) return;
-  // reviewed.status = date the raw meeting was logged (= when it was "reviewed")
-  // Use statusDate as the reviewed_at moment; fallback to row.logged_at
+// ─── Compute review_hours directly from the reviewed row ─────────────────
+// review_hours = reviewed.logged_at − parseDateFromStatus(reviewed.status)
+// reviewed.status = date of the original meeting (dd/MM/yyyy HH:mm:ss)
+// reviewed.logged_at = when this review entry was logged (= review time)
+function computeReviewHours(row) {
+  if (row.type !== 'reviewed' && row.type !== 're-reviewed') return undefined;
   const statusDate = parseDateFromStatus(row.status);
-  const dateMatch = datesMatch(rawRow.logged_at, statusDate);
-  const confidence = dateMatch ? 'full' : 'partial';
-  const reviewedAtIso = statusDate || row.logged_at;
-  const rawTime = new Date(rawRow.logged_at).getTime();
-  const reviewTime = new Date(reviewedAtIso).getTime();
-  const reviewHours = (reviewTime - rawTime) / (1000 * 60 * 60);
-  stmts.updateReviewLink.run({
+  if (!statusDate || !row.logged_at) return undefined;
+  const meetingTime = new Date(statusDate).getTime();
+  const reviewTime  = new Date(row.logged_at).getTime();
+  const reviewHours = (reviewTime - meetingTime) / (1000 * 60 * 60);
+  if (isNaN(reviewHours) || reviewHours < 0) return undefined;
+  stmts.updateReviewHours.run({
     id: row.id,
-    raw_logged_at: rawRow.logged_at,
-    reviewed_at: reviewedAtIso,
-    review_hours: Math.round(reviewHours * 100) / 100,
+    review_hours:  Math.round(reviewHours * 100) / 100,
     is_sla_breach: reviewHours > 4 ? 1 : 0,
-    link_confidence: confidence,
   });
-}
-
-function backfillRawToReview(row) {
-  if (!row.docs_url) return;
-  if (row.type !== 'raw') return;
-  const reviewedRow = stmts.findReviewedByDocsUrl.get({ docs_url: row.docs_url });
-  if (!reviewedRow) return;
-  const reviewed = db.prepare('SELECT status, logged_at FROM logs WHERE id = ?').get(reviewedRow.id);
-  const statusDate = parseDateFromStatus(reviewed?.status);
-  const dateMatch = datesMatch(row.logged_at, statusDate);
-  const confidence = dateMatch ? 'full' : 'partial';
-  const reviewedAtIso = statusDate || reviewed?.logged_at || reviewedRow.logged_at;
-  const rawTime = new Date(row.logged_at).getTime();
-  const reviewTime = new Date(reviewedAtIso).getTime();
-  const reviewHours = (reviewTime - rawTime) / (1000 * 60 * 60);
-  stmts.updateReviewLink.run({
-    id: reviewedRow.id,
-    raw_logged_at: row.logged_at,
-    reviewed_at: reviewedAtIso,
-    review_hours: Math.round(reviewHours * 100) / 100,
-    is_sla_breach: reviewHours > 4 ? 1 : 0,
-    link_confidence: confidence,
-  });
+  return reviewHours;
 }
 
 // ─── Core sync function ───────────────────────────────────
@@ -98,12 +71,10 @@ function syncFromData(data, sseClients = []) {
       if (existing) updated++;
       else inserted++;
 
-      // STEP 2: Link raw↔reviewed
+      // STEP 2: compute review_hours for reviewed/re-reviewed rows
       if (row.type === 'reviewed' || row.type === 're-reviewed') {
-        linkReviewToRaw(row);
-        linked++;
-      } else if (row.type === 'raw') {
-        backfillRawToReview(row);
+        const h = computeReviewHours(row);
+        if (h !== undefined) linked++;
       }
     }
 
