@@ -33,5 +33,15 @@ const API = {
   async getFunnel(t,r){ return this.fetchJSON('/funnel', { team: t, range: r }); },
   async getTrends(t,d){ return this.fetchJSON('/trends', { team: t, days: d }); },
   
-  async getRows(args) { return this.fetchJSON('/rows', args); }
+  async getRows(args) { return this.fetchJSON('/rows', args); },
+
+  async syncManual() {
+    try {
+      const res = await fetch('/api/sync/manual', { method: 'POST' });
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 };

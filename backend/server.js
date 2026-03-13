@@ -47,6 +47,19 @@ app.get('/events', (req, res) => {
 // ─── Auth middleware for sync routes ────────────────────
 const { requireApiKey } = require('./middleware/auth');
 
+// ─── Cron Job auto pull from n8n ────────────────────────
+const { startCronJob, triggerSync } = require('./cron');
+startCronJob();
+
+app.post('/api/sync/manual', async (req, res) => {
+  try {
+    await triggerSync();
+    res.json({ ok: true, message: 'Sync triggered' });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: String(error) });
+  }
+});
+
 // ─── API Routes ─────────────────────────────────────────
 app.use('/api/meta', require('./routes/meta'));
 app.use('/api/sync', requireApiKey, require('./routes/sync'));
@@ -65,10 +78,6 @@ app.use('/api/teams', require('./routes/teams'));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
-
-// ─── Cron Job auto pull from n8n ────────────────────────
-const { startCronJob } = require('./cron');
-startCronJob();
 
 // ─── Start ──────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {

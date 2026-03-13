@@ -91,9 +91,23 @@ window.appData = {
     });
 
     // Refresh
-    document.getElementById('btn-refresh').addEventListener('click', () => {
+    document.getElementById('btn-refresh').addEventListener('click', async () => {
+      const btn = document.getElementById('btn-refresh');
+      const timeSpan = document.getElementById('last-sync-time');
+      
+      btn.classList.add('opacity-50', 'pointer-events-none');
+      timeSpan.textContent = 'SYNCING...';
       document.getElementById('new-rows-badge').classList.add('badge-hidden');
-      this.renderAll();
+      
+      try {
+        await API.syncManual();
+        await this.renderAll();
+      } catch (err) {
+        console.error('Manual sync failed:', err);
+      } finally {
+        btn.classList.remove('opacity-50', 'pointer-events-none');
+        this.updateSyncTime();
+      }
     });
 
 

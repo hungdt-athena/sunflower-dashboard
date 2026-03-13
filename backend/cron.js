@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./db');
 
+let runSyncGlobal = null;
+
 function startCronJob() {
   const WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
   if (!WEBHOOK_URL) {
@@ -9,9 +11,9 @@ function startCronJob() {
     return;
   }
 
-  // Chạy mỗi 15 phút (15 * 60 * 1000 ms)
-  const syncInterval = 15 * 60 * 1000;
-  console.log(`[Cron] Starting auto-sync every 15 minutes to: ${WEBHOOK_URL}`);
+  // Chạy mỗi 5 phút (5 * 60 * 1000 ms)
+  const syncInterval = 5 * 60 * 1000;
+  console.log(`[Cron] Starting auto-sync every 5 minutes to: ${WEBHOOK_URL}`);
 
   const runSync = async () => {
     try {
@@ -71,14 +73,26 @@ function startCronJob() {
       db.updateSyncMeta(fingerprint);
 
       console.log(`[Cron] Sync completed: +${inserted} ~${updated} -${deleted} (Linked: ${linked})`);
+      
+      // Notify SSE clients
+      db.notifySSE({ type: 'full-sync', fingerprint, changes: inserted + updated + deleted });
 
     } catch (error) {
       console.error('[Cron] Error during auto-sync:', error);
     }
   };
 
+  runSyncGlobal = runSync;
   runSync(); // Chạy ngay lập tức lần đầu
   setInterval(runSync, syncInterval);
 }
 
-module.exports = { startCronJob };
+const triggerSync = async () => {
+  if (runSyncGlobal) {
+    await runSyncGlobal();
+  } else {
+    console.log('[Cron] Cron job not started, cannot trigger sync');
+  }
+};
+
+module.exports = { startCronJob, triggerSync };
