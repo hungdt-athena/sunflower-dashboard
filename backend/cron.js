@@ -3,7 +3,8 @@ const { db, stmts } = require('./db');
 // ─── Same link helpers as sync.js ────────────────────────
 function parseDateFromStatus(statusStr) {
   if (!statusStr) return null;
-  const match = statusStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  // Bỏ ký tự $ ở cuối để regex match kể cả khi string có chứa đuôi giờ giấc (vd: 23/02/2026 16:39:33)
+  const match = statusStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
   if (!match) return null;
   const [, dd, mm, yyyy] = match;
   return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
