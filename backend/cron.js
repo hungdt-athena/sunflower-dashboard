@@ -17,7 +17,7 @@ function startCronJob() {
     try {
       console.log('[Cron] Fetching data from n8n Webhook...');
       const response = await fetch(WEBHOOK_URL, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Accept': 'application/json',
           'x-api-key': process.env.SYNC_API_KEY || ''
