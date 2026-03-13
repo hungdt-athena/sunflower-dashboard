@@ -234,6 +234,43 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+/* Tooltip Align Left (prevent clipping on left edge) */
+.tooltip-left-align .tooltip-content {
+  left: 0;
+  transform: translateY(4px);
+}
+.tooltip-left-align.tooltip-bottom .tooltip-content {
+  transform: translateY(-4px);
+}
+.tooltip-left-align:hover .tooltip-content,
+.tooltip-left-align.tooltip-bottom:hover .tooltip-content {
+  transform: translateY(0);
+}
+.tooltip-left-align .tooltip-content::after {
+  left: 10px;
+  transform: none;
+}
+
+/* Tooltip Align Right (prevent clipping on right edge) */
+.tooltip-right-align .tooltip-content {
+  left: auto;
+  right: 0;
+  transform: translateY(4px);
+}
+.tooltip-right-align.tooltip-bottom .tooltip-content {
+  transform: translateY(-4px);
+}
+.tooltip-right-align:hover .tooltip-content,
+.tooltip-right-align.tooltip-bottom:hover .tooltip-content {
+  transform: translateY(0);
+}
+.tooltip-right-align .tooltip-content::after {
+  left: auto;
+  right: 10px;
+  transform: none;
+}
+
+
 /* ===================================
    HEALTH PARAMETERS - NEW CARD DESIGN
    =================================== */

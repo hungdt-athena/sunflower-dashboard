@@ -182,7 +182,7 @@
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       Unconfirmed
-                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unconfirmed" class="tooltip-content z-50">Total number of unconfirmed meetings in the selected time range for the selected team.</span></span>
+                      <span class="tooltip-wrapper tooltip-bottom tooltip-left-align"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unconfirmed" class="tooltip-content z-50">Total number of unconfirmed meetings in the selected time range for the selected team.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px] z-10 relative">error</span>
                 </div>
@@ -245,7 +245,7 @@
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-rose-700 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       SLA Breach
-                      <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined text-rose-500 opacity-60 tooltip-icon">help</span><span id="tooltip-slabreach" class="tooltip-content z-50">Total number of reviews exceeding the 4-hour standard timeframe.</span></span>
+                      <span class="tooltip-wrapper tooltip-bottom tooltip-right-align"><span class="material-symbols-outlined text-rose-500 opacity-60 tooltip-icon">help</span><span id="tooltip-slabreach" class="tooltip-content z-50">Total number of reviews exceeding the 4-hour standard timeframe.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px] z-10 relative">timer_off</span>
                 </div>
@@ -269,7 +269,7 @@
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                           <span class="material-symbols-outlined text-[14px] text-blue-500 mr-1.5">list_alt</span>
                           Total Meeting
-                          <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-total" class="tooltip-content z-50">Total number of meetings in the selected time range for the selected team.</span></span>
+                          <span class="tooltip-wrapper tooltip-bottom tooltip-left-align"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-total" class="tooltip-content z-50">Total number of meetings in the selected time range for the selected team.</span></span>
                         </p>
                     </div>
                     <div class="flex items-end justify-between mt-3 z-10 relative">
@@ -304,7 +304,7 @@
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                           <span class="material-symbols-outlined text-[14px] text-amber-500 mr-1.5">pending_actions</span>
                           Unreviewed
-                          <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unreviewed" class="tooltip-content z-50">Total number of unreviewed meetings waiting in queue.</span></span>
+                          <span class="tooltip-wrapper tooltip-bottom tooltip-right-align"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unreviewed" class="tooltip-content z-50">Total number of unreviewed meetings waiting in queue.</span></span>
                         </p>
                     </div>
                     <div class="flex items-end justify-between mt-3 z-10 relative">
@@ -321,7 +321,7 @@
                 <h3 class="text-slate-900 text-sm font-bold mb-3 flex items-center gap-1.5 border-b border-slate-100 pb-2">
                     <span class="material-symbols-outlined text-blue-500 text-[18px]">filter_alt</span>
                     Meeting Funnel
-                    <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Conversion rate across stages: Raw -> Confirmed -> Reviewed.</span></span>
+                    <span class="tooltip-wrapper tooltip-bottom tooltip-right-align"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Conversion rate across stages: Raw -> Confirmed -> Reviewed.</span></span>
                 </h3>
                 <div class="flex-1 flex flex-col justify-center mt-1">
                     <!-- Raw -->
@@ -507,13 +507,13 @@
                   <tr>
                     <th>Team</th>
                     <th>
-                      <span class="tooltip-wrapper" style="margin-left:0">Score
+                      <span class="tooltip-wrapper tooltip-bottom" style="margin-left:0">Score
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
                         <span class="tooltip-content" style="white-space:pre-line;width:220px">Risk score tổng hợp từ nhiều chỉ số (SLA breach, unconfirmed, unreviewed, avg hours, re-review rate). Score càng cao = rủi ro càng lớn.</span>
                       </span>
                     </th>
                     <th style="width: 45%">
-                      <span class="tooltip-wrapper" style="margin-left:0">Intensity
+                      <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0">Intensity
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
                         <span class="tooltip-content">Chiều dài bar thể hiện tỉ lệ score của team so với team có score cao nhất.</span>
                       </span>
@@ -545,7 +545,7 @@
                     <th>Total Reviews</th>
                     <th>Median Speed</th>
                     <th>
-                      <span class="tooltip-wrapper" style="margin-left:0">Consistency
+                      <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0">Consistency
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
                         <span class="tooltip-content">Consistency Score = độ ổn định về tốc độ review. Score thấp hơn = ổn định hơn (CV thấp). Score trong ngoặc là điểm tổng hợp (median + consistency).</span>
                       </span>
