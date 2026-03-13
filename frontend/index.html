@@ -182,7 +182,7 @@
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Unconfirmed
-                      <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unconfirmed" class="tooltip-content z-50">Total number of unconfirmed meetings in the selected time range for the selected team.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unconfirmed" class="tooltip-content z-50">Total number of unconfirmed meetings in the selected time range for the selected team.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px] z-10 relative">error</span>
                 </div>
@@ -197,7 +197,7 @@
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Avg Review
-                      <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Average time taken to complete a review.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Average time taken to complete a review.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-slate-400 text-[18px] z-10 relative">hourglass_empty</span>
                 </div>
@@ -212,7 +212,7 @@
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Median Review
-                      <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Median time taken to complete a review.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Median time taken to complete a review.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-slate-400 text-[18px] z-10 relative">linear_scale</span>
                 </div>
@@ -226,7 +226,7 @@
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Velocity
-                      <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Number of meetings reviewed per day.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Number of meetings reviewed per day.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-primary/70 text-[18px] z-10 relative">speed</span>
                 </div>
@@ -259,20 +259,21 @@
 
         <!-- KPI Framework Row 2 -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-8">
-            <div class="lg:col-span-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="lg:col-span-4 bg-white border border-slate-200 rounded-xl shadow-sm p-6 relative flex flex-col justify-center">
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 to-transparent pointer-events-none rounded-xl"></div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative z-10 w-full">
                 
                 <!-- Total -->
-                <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="total">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex flex-col justify-center p-2 stat-clickable group" data-stat="total">
                     <div class="flex justify-between items-start mb-2">
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                          <span class="material-symbols-outlined text-[14px] text-blue-500 mr-1.5">list_alt</span>
                           Total Meeting
-                          <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-total" class="tooltip-content z-50">Total number of meetings in the selected time range for the selected team.</span></span>
+                          <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-total" class="tooltip-content z-50">Total number of meetings in the selected time range for the selected team.</span></span>
                         </p>
-                        <span class="material-symbols-outlined text-blue-500 text-[18px] z-10 relative">list_alt</span>
                     </div>
                     <div class="flex items-end justify-between mt-3 z-10 relative">
-                        <p class="text-3xl font-bold text-slate-800" id="stat-total">-</p>
+                        <p class="text-4xl font-bold text-slate-800" id="stat-total">-</p>
                         <div class="text-right flex flex-col items-end gap-1.5 mb-1">
                           <span id="stat-rawdup" class="badge bg-secondary">0 dup</span>
                           <span id="stat-tagmismatch" class="badge bg-amber hidden">0 mismatches</span>
@@ -281,17 +282,16 @@
                 </div>
 
                 <!-- Reviewed -->
-                <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="reviewed">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex flex-col justify-center p-2 stat-clickable group" data-stat="reviewed">
                     <div class="flex justify-between items-start mb-2">
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                          <span class="material-symbols-outlined text-[14px] text-emerald-500 mr-1.5">check_circle</span>
                           Reviewed
-                          <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-reviewed" class="tooltip-content z-50">Total number of reviewed meetings in the selected time range for the selected team.</span></span>
+                          <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-reviewed" class="tooltip-content z-50">Total number of reviewed meetings in the selected time range for the selected team.</span></span>
                         </p>
-                        <span class="material-symbols-outlined text-emerald-500 text-[18px] z-10 relative">check_circle</span>
                     </div>
                     <div class="flex items-end justify-between mt-3 z-10 relative">
-                        <p class="text-3xl font-bold text-slate-800 summary-green" id="stat-reviewed">-</p>
+                        <p class="text-4xl font-bold text-slate-800 summary-green" id="stat-reviewed">-</p>
                         <div class="text-right flex flex-col items-end gap-1 mb-1">
                           <span id="stat-rereviewed" class="badge bg-secondary">0 re-rev</span>
                         </div>
@@ -299,21 +299,21 @@
                 </div>
 
                 <!-- Unreviewed -->
-                <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="unreviewed">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex flex-col justify-center p-2 stat-clickable group" data-stat="unreviewed">
                     <div class="flex justify-between items-start mb-2">
                         <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                          <span class="material-symbols-outlined text-[14px] text-amber-500 mr-1.5">pending_actions</span>
                           Unreviewed
-                          <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unreviewed" class="tooltip-content z-50">Total number of unreviewed meetings waiting in queue.</span></span>
+                          <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unreviewed" class="tooltip-content z-50">Total number of unreviewed meetings waiting in queue.</span></span>
                         </p>
-                        <span class="material-symbols-outlined text-amber-500 text-[18px] z-10 relative">pending_actions</span>
                     </div>
                     <div class="flex items-end justify-between mt-3 z-10 relative">
-                        <p class="text-3xl font-bold text-slate-800 summary-amber" id="stat-unreviewed">-</p>
+                        <p class="text-4xl font-bold text-slate-800 summary-amber" id="stat-unreviewed">-</p>
                         <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-1 opacity-80">In Queue</span>
                     </div>
                 </div>
 
+              </div>
             </div>
 
             <!-- Funnel Only -->
