@@ -146,7 +146,7 @@
     </header>
 
     <!-- Global Filters Bar -->
-    <div class="px-8 py-3 bg-white border-b border-slate-200 shrink-0 flex items-center gap-4">
+    <div class="px-8 py-3 bg-white border-b border-slate-200 shrink-0 flex flex-wrap items-center gap-4">
        <!-- Time Filter (Always visible, put first) -->
        <div class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 time-tabs">
           <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="today">Today</button>
@@ -156,7 +156,7 @@
           <button class="tab-btn px-3 py-1.5 rounded-md text-sm font-semibold text-slate-600 transition-all hover:bg-white hover:shadow-sm" data-range="all">All Time</button>
        </div>
        
-       <div class="tooltip-wrapper text-slate-500 text-[13px] font-medium flex items-center gap-1.5 cursor-help hidden sm:flex bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg h-[34px]">
+       <div class="tooltip-wrapper text-slate-500 text-[13px] font-medium flex items-center gap-1.5 cursor-help bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg h-[34px]">
          <span class="material-symbols-outlined text-[16px]">calendar_month</span>
          <span id="date-range-text">--/--/----</span>
          <span class="tooltip-content z-50">Khoảng thời gian đang lọc (định dạng: dd/MM/yyyy)</span>
@@ -256,7 +256,7 @@
                 </div>
                 <div class="flex items-end justify-between mt-3 z-10 relative">
                     <p class="text-3xl font-bold text-rose-600" id="stat-sla-pct">-%</p>
-                    <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80"><span id="stat-sla-count">0</span> Items</p>
+                    <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80" id="stat-sla-count">0 / 0 Reviews</p>
                 </div>
             </div>
         </div>

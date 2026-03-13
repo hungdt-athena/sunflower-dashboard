@@ -25,7 +25,12 @@ const StatsSection = {
     this.elements.total.textContent = data.totalMeeting;
     
     this.elements.rereviewed.textContent = `${data.reReviewed} re-rev`;
-    this.elements.rereviewRate.textContent = `${data.reReviewRate}%`;
+    if (range === 'all') {
+      this.elements.rereviewRate.parentElement.style.opacity = '0';
+    } else {
+      this.elements.rereviewRate.parentElement.style.opacity = '1';
+      this.elements.rereviewRate.textContent = `${data.reReviewRate}%`;
+    }
     this.elements.rawdup.textContent = `${data.rawDup} dup`;
     
     if (data.tagMismatch > 0) {
@@ -39,7 +44,7 @@ const StatsSection = {
     this.elements.medianHours.textContent = data.medianReviewTime !== null ? `${data.medianReviewTime}h` : '-';
     
     this.elements.slaPct.textContent = `${data.slaBreachPct}%`;
-    this.elements.slaCount.textContent = data.slaBreach;
+    this.elements.slaCount.textContent = `${data.slaBreach}/${data.slaTotal} Reviews`;
     if (data.slaBreachPct > 20) this.elements.slaPct.className = 'kpi-value summary-amber';
     else if (data.slaBreachPct > 50) this.elements.slaPct.className = 'kpi-value summary-red';
     else this.elements.slaPct.className = 'kpi-value summary-green';

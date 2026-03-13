@@ -234,6 +234,7 @@ function getStats(team, range) {
     avgReviewTime:    avgReviewTime    ? Math.round(avgReviewTime    * 100) / 100 : null,
     medianReviewTime: medianReviewTime ? Math.round(medianReviewTime * 100) / 100 : null,
     slaBreach,
+    slaTotal,
     slaBreachPct:  Math.round(slaPct        * 100) / 100,
     velocity:      velocity ? Math.round(velocity * 100) / 100 : null,
     reReviewRate:  Math.round(reReviewRate  * 100) / 100,
