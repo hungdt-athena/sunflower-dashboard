@@ -175,12 +175,12 @@
         <!-- KPI Framework Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             
-            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative group" data-stat="total">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="total">
                 <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Total Meeting
-                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Toàn bộ lượng data thô kéo về từ Extension và Google Sheets.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Total number of meetings in the selected time range for the selected team.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-blue-500 text-[18px] z-10 relative">list_alt</span>
                 </div>
@@ -193,12 +193,12 @@
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative group" data-stat="reviewed">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="reviewed">
                 <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Reviewed
-                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số lượng meeting đã hoàn thành các bước Review.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Total number of reviewed meetings in the selected time range for the selected team.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-emerald-500 text-[18px] z-10 relative">check_circle</span>
                 </div>
@@ -210,12 +210,12 @@
                 </div>
             </div>
             
-            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative group" data-stat="needConfirm">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="needConfirm">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Unconfirmed
-                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số cuộc họp thô chưa được xác nhận để bắt đầu vòng đời Review.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Total number of unconfirmed meetings in the selected time range for the selected team.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px] z-10 relative">error</span>
                 </div>
@@ -225,12 +225,12 @@
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative group" data-stat="unreviewed">
+            <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="unreviewed">
                 <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       Unreviewed
-                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Số cuộc họp đã xác nhận nhưng còn đọng lại, chưa được Review.</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Total number of unreviewed meetings waiting in queue.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-amber-500 text-[18px] z-10 relative">pending_actions</span>
                 </div>
@@ -240,12 +240,12 @@
                 </div>
             </div>
 
-            <div class="bg-rose-50/50 border border-rose-200 p-5 rounded-xl shadow-sm hover:border-rose-400 transition-all cursor-pointer stat-clickable relative group" data-stat="slabreach">
+            <div class="bg-rose-50/50 border border-rose-200 p-5 rounded-xl shadow-sm hover:border-rose-400 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="slabreach">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-rose-700 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
                       SLA Breach
-                      <span class="tooltip-wrapper"><span class="material-symbols-outlined text-rose-500 opacity-60 tooltip-icon">help</span><span class="tooltip-content">Chỉ số vi phạm thời hạn đánh giá quy chuẩn (>4h).</span></span>
+                      <span class="tooltip-wrapper"><span class="material-symbols-outlined text-rose-500 opacity-60 tooltip-icon">help</span><span class="tooltip-content z-50">Total number of reviews exceeding the 4-hour standard timeframe.</span></span>
                     </p>
                     <span class="material-symbols-outlined text-rose-500 text-[18px] z-10 relative">timer_off</span>
                 </div>
@@ -262,7 +262,7 @@
             <div class="flex flex-col items-center justify-center p-2">
               <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Average Review
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Thời gian trung bình để xử lý xong một đánh giá (Review).</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Average time taken to complete a review.</span></span>
               </p>
               <p class="text-4xl font-bold text-slate-800" id="stat-avg-hours">-</p>
               <div class="mt-2 text-[11px] font-bold uppercase tracking-wider" id="stat-avg-trend"></div>
@@ -270,14 +270,14 @@
             <div class="flex flex-col items-center justify-center p-2">
               <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[14px]">linear_scale</span> Median Review
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Giá trị trung vị của thời gian xử lý các đánh giá (chính xác hơn số phân phối).</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Median time taken to complete a review.</span></span>
               </p>
               <p class="text-4xl font-bold text-slate-800" id="stat-median-hours">-</p>
             </div>
             <div class="flex flex-col items-center justify-center p-2">
               <p class="text-primary/70 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[14px]">speed</span> Velocity
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined text-primary/70 hover:text-primary tooltip-icon">help</span><span class="tooltip-content z-50">Tốc độ đánh giá (Số meeting được reviews / Mỗi ngày).</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined text-primary/70 hover:text-primary tooltip-icon">help</span><span class="tooltip-content z-50">Number of meetings reviewed per day.</span></span>
               </p>
               <div class="flex items-baseline gap-1.5">
                 <p class="text-4xl font-bold text-primary" id="stat-velocity">-</p>
@@ -293,6 +293,7 @@
             <h3 class="text-slate-900 text-sm font-bold mb-3 flex items-center gap-1.5 border-b border-slate-100 pb-2">
                 <span class="material-symbols-outlined text-blue-500 text-[18px]">filter_alt</span>
                 Meeting Funnel
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Conversion rate across stages: Raw -> Confirmed -> Reviewed.</span></span>
             </h3>
             <div class="flex-1 flex flex-col justify-center mt-1">
                 <!-- Raw -->
@@ -308,7 +309,7 @@
                 <!-- Spacer + Conv -->
                 <div class="ml-3 pl-3.5 border-l-[1.5px] border-dashed border-slate-300 flex flex-col justify-center h-10 my-0.5 relative">
                   <span id="funnel-c-rate" class="badge bg-secondary self-start text-[10px] px-1.5 py-0 shadow-sm leading-tight border border-slate-200 absolute -left-1 opacity-90" style="top: 5px;">-%</span>
-                  <span class="text-[10px] text-slate-400 font-medium ml-8 leading-none mt-1">Wait: <span id="funnel-avg-confirm" class="font-bold text-slate-600">-</span></span>
+                  <span class="text-[10px] text-slate-400 font-medium ml-8 leading-none mt-1"><span id="funnel-avg-confirm" class="font-bold text-slate-600">-</span></span>
                 </div>
 
                 <!-- Confirmed -->
@@ -324,7 +325,7 @@
                 <!-- Spacer + Conv -->
                 <div class="ml-3 pl-3.5 border-l-[1.5px] border-dashed border-slate-300 flex flex-col justify-center h-10 my-0.5 relative">
                   <span id="funnel-r-rate" class="badge bg-secondary self-start text-[10px] px-1.5 py-0 shadow-sm leading-tight border border-slate-200 absolute -left-1 opacity-90" style="top: 5px;">-%</span>
-                  <span class="text-[10px] text-slate-400 font-medium ml-8 leading-none mt-1">Wait: <span id="funnel-avg-review" class="font-bold text-slate-600">-</span></span>
+                  <span class="text-[10px] text-slate-400 font-medium ml-8 leading-none mt-1"><span id="funnel-avg-review" class="font-bold text-slate-600">-</span></span>
                 </div>
 
                 <!-- Reviewed -->
@@ -344,6 +345,7 @@
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
               Meeting Distribution (Team)
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon ml-1.5">help</span><span class="tooltip-content z-50">Distribution of raw meetings across teams.</span></span>
             </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-pie-dist"></canvas>
@@ -352,6 +354,7 @@
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
               Status Breakdown
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon ml-1.5">help</span><span class="tooltip-content z-50">Proportion of unconfirmed, unreviewed, and reviewed meetings per team.</span></span>
             </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-status-stacked"></canvas>
@@ -364,7 +367,7 @@
             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
               <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
                 Review Volume vs Backlog
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Lượng meeting đổ vào và được review xong.</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">New meetings logged vs meetings reviewed.</span></span>
               </h3>
               <div class="relative flex-1 w-full min-h-[300px]">
                 <canvas id="chart-daily"></canvas>
@@ -373,7 +376,7 @@
             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
               <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
                 SLA Compliance Trend
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tỉ lệ hoàn thành đúng hạn SLA.</span></span>
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Percentage of reviews completed within the 4-hour SLA.</span></span>
               </h3>
               <div class="relative flex-1 w-full min-h-[300px]">
                 <canvas id="chart-sla"></canvas>
@@ -383,7 +386,8 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
               <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-                Cycle Time Breakdown
+                Average Cycle Time
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon ml-1.5">help</span><span class="tooltip-content z-50">Time from when a meeting ends until it is Reviewed (measures process delay).</span></span>
               </h3>
               <div class="relative flex-1 w-full min-h-[300px]">
                 <canvas id="chart-cycle-time"></canvas>
@@ -392,6 +396,7 @@
             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
               <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
                 Review Time Distribution
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon ml-1.5">help</span><span class="tooltip-content z-50">Distribution of review durations.</span></span>
               </h3>
               <div class="relative flex-1 w-full min-h-[300px]">
                 <canvas id="chart-dist"></canvas>

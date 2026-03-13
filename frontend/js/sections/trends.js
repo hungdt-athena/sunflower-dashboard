@@ -49,7 +49,6 @@ const TrendsSection = {
         ctx.textBaseline = 'middle';
 
         meta.data.forEach((element, index) => {
-          if (index >= 5) return; // Only top 5
           const val = dataArr[index];
           if (!val) return;
           const pct = Math.round((val / total) * 100);
@@ -125,6 +124,34 @@ const TrendsSection = {
       reviewed: data.map(d => d.reviewed)
     };
 
+    const barLabelsPlugin = {
+      id: 'barLabels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+          const meta = chart.getDatasetMeta(datasetIndex);
+          meta.data.forEach((element, index) => {
+            const val = dataset.rawValues ? dataset.rawValues[index] : 0;
+            if (val > 0) {
+              const height = Math.abs(element.base - element.y);
+              if (height > 15) {
+                const centerX = element.x;
+                const centerY = (element.y + element.base) / 2;
+                ctx.fillText(val, centerX, centerY);
+              }
+            }
+          });
+        });
+        ctx.restore();
+      }
+    };
+
     this.charts.stacked = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -150,6 +177,7 @@ const TrendsSection = {
           }
         ]
       },
+      plugins: [barLabelsPlugin],
       options: {
         indexAxis: 'x',
         plugins: {
