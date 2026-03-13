@@ -56,14 +56,26 @@ const RiskSection = {
       const cLabel = Palette.getRiskLabel(d.band);
       const cBg = Palette.getRiskColor(d.band);
       const wPct = (d.score / maxScore) * 100;
+      
+      let trendHTML = '';
+      if (d.prevScore !== null && d.prevScore !== undefined) {
+        if (d.score > d.prevScore + 0.1) {
+          trendHTML = '<span class="material-symbols-outlined text-[15px] font-bold text-rose-500 ml-1" title="Aggravated compared to previous period">trending_up</span>';
+        } else if (d.score < d.prevScore - 0.1) {
+          trendHTML = '<span class="material-symbols-outlined text-[15px] font-bold text-emerald-500 ml-1" title="Improved compared to previous period">trending_down</span>';
+        } else {
+          trendHTML = '<span class="material-symbols-outlined text-[15px] font-bold text-slate-300 ml-1" title="No change">trending_flat</span>';
+        }
+      }
 
       return `
         <tr>
           <td><strong>${d.team}</strong></td>
           <td>
-            <div class="risk-score-wrapper">
-              <span class="score-badge" style="background: ${cBg}; color: white">${d.score.toFixed(1)}</span>
-              <span class="ml-2">${cLabel}</span>
+            <div class="risk-score-wrapper flex items-center">
+              <span class="score-badge mr-2" style="background: ${cBg}; color: white">${d.score.toFixed(1)}</span>
+              <span>${cLabel}</span>
+              ${trendHTML}
             </div>
           </td>
           <td>

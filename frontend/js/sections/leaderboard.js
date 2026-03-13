@@ -36,6 +36,7 @@ const LeaderboardSection = {
           <td class="text-left"><strong>${l.team}</strong></td>
           <td>${l.reviewCount}</td>
           <td>${l.medianHours}h</td>
+          <td>${l.cv} <span class="text-xs text-slate-400">(${Math.round(l.score*10)/10})</span></td>
         </tr>
       `).join('');
     }

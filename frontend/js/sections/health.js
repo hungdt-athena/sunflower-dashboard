@@ -21,10 +21,13 @@ const HealthSection = {
     html += renderList('Most unreviewed', data.mostUnreviewed);
     html += renderList('High SLA >20%', data.highSla, item => `${Format.number(item.pct)}%`);
     
+    html += renderList('Potential Breachers (SLA >80%)', data.potentialBreachers);
+    html += renderList('Gaps vs Benchmark', data.benchmarkGaps, item => `<span class="text-rose-500">+${item.gapPct}% slower</span>`);
+
     if (data.critical.length > 0) {
-      html += `<div class="health-item"><div class="health-label summary-red">🔴 Critical Teams</div><div class="health-val"><strong>${data.critical.join(', ')}</strong></div></div>`;
+      html += `<div class="health-item"><div class="health-label summary-red">🔴 Critical Teams</div><div class="health-val text-xs"><strong>${data.critical.join(', ')}</strong></div></div>`;
     } else {
-      html += `<div class="health-item"><div class="health-label summary-green">🟢 Critical Teams</div><div class="health-val text-muted">None</div></div>`;
+      html += `<div class="health-item"><div class="health-label summary-green">🟢 Critical Teams</div><div class="health-val text-muted text-xs">None</div></div>`;
     }
 
     html += renderList('No reviews', data.noReviews);

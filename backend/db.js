@@ -163,6 +163,24 @@ function dateRangeFilter(range) {
   }
 }
 
+function dateRangeFilterPrev(range) {
+  switch (range) {
+    case 'today':
+      return "AND date(logged_at) = date('now', '-1 day')";
+    case '3d':
+      return "AND logged_at >= datetime('now', '-6 days') AND logged_at < datetime('now', '-3 days')";
+    case '7d':
+      return "AND logged_at >= datetime('now', '-14 days') AND logged_at < datetime('now', '-7 days')";
+    case '14d':
+      return "AND logged_at >= datetime('now', '-28 days') AND logged_at < datetime('now', '-14 days')";
+    case '30d':
+      return "AND logged_at >= datetime('now', '-60 days') AND logged_at < datetime('now', '-30 days')";
+    case 'all':
+    default:
+      return '';
+  }
+}
+
 function teamFilter(team) {
   if (!team || team === 'all') return '';
   return `AND team = '${team.replace(/'/g, "''")}'`;
@@ -170,9 +188,9 @@ function teamFilter(team) {
 
 // ─── Stats Queries ─────────────────────────────────────
 
-function getStats(team, range) {
+function getStats(team, range, rfOverride = null) {
   const tf = teamFilter(team);
-  const rf = dateRangeFilter(range);
+  const rf = rfOverride !== null ? rfOverride : dateRangeFilter(range);
   const base = `FROM logs WHERE is_deleted = 0 ${tf} ${rf}`;
 
   // ── Meeting KPIs: all based on type='raw' status ─────────────────────
@@ -245,6 +263,7 @@ function getStats(team, range) {
 // ─── Health ────────────────────────────────────────────
 
 function getHealth(range) {
+  const tf = teamFilter('all'); // Not really needed, but keeping pattern
   const rf = dateRangeFilter(range);
   const base = `FROM logs WHERE is_deleted = 0 ${rf}`;
 
@@ -294,6 +313,37 @@ function getHealth(range) {
     AND logged_at < datetime('now', '-7 days')
   `).get().v;
 
+  // Potential Breachers (> 3.2h old and <= 4h old)
+  const potentialBreachers = db.prepare(`
+    SELECT team, COUNT(*) as count 
+    FROM logs 
+    WHERE is_deleted = 0 AND type = 'raw' 
+    AND status IN ('pending', 'confirmed') 
+    AND (julianday('now') - julianday(logged_at)) * 24 >= 3.2
+    AND (julianday('now') - julianday(logged_at)) * 24 <= 4
+    ${rf}
+    AND team IS NOT NULL AND team != ''
+    GROUP BY team
+    ORDER BY count DESC
+  `).all();
+
+  // Gaps vs Benchmark (Slower by > 30%)
+  const globalStats = getStats('all', range);
+  const globalMedian = globalStats.medianReviewTime || 0;
+  
+  const benchmarkGaps = [];
+  if (globalMedian > 0) {
+    for (const [name, s] of Object.entries(teamStats)) {
+      if (s.medianReviewTime) {
+        const gapPct = (s.medianReviewTime - globalMedian) / globalMedian * 100;
+        if (gapPct > 30) {
+          benchmarkGaps.push({ team: name, gapPct: Math.round(gapPct), median: s.medianReviewTime });
+        }
+      }
+    }
+  }
+  benchmarkGaps.sort((a,b) => b.gapPct - a.gapPct);
+
   return {
     mostUnconfirmed,
     mostUnreviewed,
@@ -301,6 +351,9 @@ function getHealth(range) {
     critical,
     noReviews,
     staleItems,
+    potentialBreachers,
+    benchmarkGaps,
+    globalMedian,
   };
 }
 
@@ -340,9 +393,28 @@ function getRiskScores(range, weights = null) {
     else if (score <= 75) band = 'at-risk';
     else band = 'critical';
 
+    let prevScore = null;
+    if (range !== 'all') {
+      const prevRf = dateRangeFilterPrev(range);
+      const ps = getStats(t, range, prevRf);
+      
+      if (ps.totalMeeting > 0 || ps.reviewed > 0) {
+        const pTotal = ps.totalMeeting || 1;
+        const pSla = ps.slaBreachPct * w.sla;
+        const pUnconf = (ps.needConfirm / pTotal * 100) * w.unconfirmed;
+        const pUnrev = (ps.unreviewed / pTotal * 100) * w.unreviewed;
+        const pAvg = Math.min((ps.avgReviewTime || 0) / 24 * 100, 100) * w.avgHours;
+        const pReRev = ps.reReviewRate * w.reReview;
+        
+        prevScore = pSla + pUnconf + pUnrev + pAvg + pReRev;
+        prevScore = Math.min(Math.round(prevScore * 100) / 100, 100);
+      }
+    }
+
     results.push({
       team: t,
       score,
+      prevScore,
       band,
       components: {
         sla: Math.round(slaComponent * 100) / 100,
@@ -363,25 +435,32 @@ function getRiskScores(range, weights = null) {
 function getPending(team) {
   const tf = teamFilter(team);
 
-  const unconfirmed = db.prepare(`
-    SELECT team, COUNT(*) as count,
-      MIN(logged_at) as oldest,
-      ROUND(julianday('now') - julianday(MIN(logged_at)), 1) as oldest_days
-    FROM logs 
-    WHERE is_deleted = 0 AND type = 'raw' AND status = 'pending' ${tf}
-    GROUP BY team ORDER BY count DESC
-  `).all();
+  const getItems = (status) => {
+    const list = db.prepare(`
+      SELECT title, team, tag_name,
+        ROUND((julianday('now') - julianday(logged_at)) * 24, 1) as age_hours
+      FROM logs 
+      WHERE is_deleted = 0 AND type = 'raw' AND status = '${status}' ${tf}
+      ORDER BY age_hours DESC
+      LIMIT 20
+    `).all();
 
-  const unreviewedList = db.prepare(`
-    SELECT team, COUNT(*) as count,
-      MIN(logged_at) as oldest,
-      ROUND(julianday('now') - julianday(MIN(logged_at)), 1) as oldest_days
-    FROM logs 
-    WHERE is_deleted = 0 AND type = 'raw' AND status = 'confirmed' ${tf}
-    GROUP BY team ORDER BY count DESC
-  `).all();
+    return list.map(item => {
+      const txt = ((item.title || '') + ' ' + (item.tag_name || '')).toLowerCase();
+      let priority = 'Medium';
+      if (txt.match(/urgent|vip|high|critical|important|khẩn/)) priority = 'High';
+      else if (txt.match(/low|minor|optional|thấp/)) priority = 'Low';
+      
+      return {
+        title: item.title || '(No title)',
+        team: item.team,
+        age_hours: item.age_hours,
+        priority
+      };
+    });
+  };
 
-  return { unconfirmed, unreviewed: unreviewedList };
+  return { unconfirmed: getItems('pending'), unreviewed: getItems('confirmed') };
 }
 
 // ─── Trends ────────────────────────────────────────────
@@ -486,21 +565,18 @@ function getTrends(team, range) {
 function getLeaderboard(range) {
   const rf = dateRangeFilter(range);
 
-  const leaderboard = db.prepare(`
+  const leaderboardRows = db.prepare(`
     SELECT team,
       COUNT(*) as review_count,
-      AVG(review_hours) as avg_hours,
-      MIN(review_hours) as min_hours
+      AVG(review_hours) as avg_hours
     FROM logs
     WHERE is_deleted = 0 AND type = 'reviewed' AND review_hours IS NOT NULL ${rf}
     AND team IS NOT NULL AND team != ''
     GROUP BY team
-    HAVING review_count >= 1
-    ORDER BY avg_hours ASC
+    HAVING review_count >= 5
   `).all();
 
-  // Compute median per team
-  return leaderboard.map((t, i) => {
+  const formatted = leaderboardRows.map(t => {
     const rows = db.prepare(`
       SELECT review_hours FROM logs
       WHERE is_deleted = 0 AND type = 'reviewed' AND review_hours IS NOT NULL ${rf}
@@ -513,15 +589,29 @@ function getLeaderboard(range) {
       ? rows[mid].review_hours
       : (rows[mid - 1].review_hours + rows[mid].review_hours) / 2;
 
+    let stdev = 0;
+    if (rows.length > 1 && t.avg_hours > 0) {
+      const sumSq = rows.reduce((acc, row) => acc + Math.pow(row.review_hours - t.avg_hours, 2), 0);
+      const variance = sumSq / (rows.length - 1);
+      stdev = Math.sqrt(variance);
+    }
+    const cv = t.avg_hours > 0 ? (stdev / t.avg_hours) : 0;
+    
+    // Score = (Speed * 0.6) + (Consistency * 0.4)
+    // Speed = median, Consistency = cv
+    const score = (median * 0.6) + ((cv * 10) * 0.4);
+
     return {
-      rank: i + 1,
       team: t.team,
       reviewCount: t.review_count,
-      avgHours: Math.round(t.avg_hours * 100) / 100,
       medianHours: Math.round(median * 100) / 100,
-      minHours: Math.round(t.min_hours * 100) / 100,
+      cv: Math.round(cv * 100) / 100,
+      score
     };
   });
+
+  formatted.sort((a,b) => a.score - b.score);
+  return formatted.map((t, i) => ({ ...t, rank: i + 1 }));
 }
 
 // ─── Funnel ────────────────────────────────────────────
