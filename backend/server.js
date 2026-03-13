@@ -49,11 +49,11 @@ const { requireApiKey } = require('./middleware/auth');
 
 // ─── Cron Job auto pull from n8n ────────────────────────
 const { startCronJob, triggerSync } = require('./cron');
-startCronJob();
+startCronJob(app);
 
 app.post('/api/sync/manual', async (req, res) => {
   try {
-    await triggerSync();
+    await triggerSync(app);
     res.json({ ok: true, message: 'Sync triggered' });
   } catch (error) {
     res.status(500).json({ ok: false, error: String(error) });
