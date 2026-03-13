@@ -19,6 +19,17 @@ const StatsSection = {
   async render(team, range) {
     const data = await API.getStats(team, range);
     
+    // Dynamic Tooltips
+    const teamLabel = team === 'all' ? 'All Teams' : team;
+    const rangeLabels = { 'today': 'Today', '3d': 'the last 3 days', '7d': 'the last 7 days', '14d': 'the last 14 days', '30d': 'the last 30 days', 'all': 'all time' };
+    const rangeLabel = rangeLabels[range] || range;
+    
+    document.getElementById('tooltip-unconfirmed').textContent = `Total number of unconfirmed meetings for ${teamLabel} in ${rangeLabel}.`;
+    document.getElementById('tooltip-slabreach').textContent = `Total number of reviews exceeding the 4-hour standard timeframe for ${teamLabel} in ${rangeLabel}.`;
+    document.getElementById('tooltip-total').textContent = `Total number of meetings for ${teamLabel} in ${rangeLabel}.`;
+    document.getElementById('tooltip-reviewed').textContent = `Total number of reviewed meetings for ${teamLabel} in ${rangeLabel}.`;
+    document.getElementById('tooltip-unreviewed').textContent = `Total number of unreviewed meetings waiting in queue for ${teamLabel}.`;
+
     this.elements.reviewed.textContent = data.reviewed;
     this.elements.unconfirmed.textContent = data.needConfirm;
     this.elements.unreviewed.textContent = data.unreviewed;

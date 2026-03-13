@@ -217,3 +217,18 @@ body {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+.tooltip-bottom .tooltip-content {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+.tooltip-bottom .tooltip-content::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e293b;
+}
+.tooltip-bottom:hover .tooltip-content {
+  transform: translateX(-50%) translateY(0);
+}
