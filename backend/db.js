@@ -69,11 +69,11 @@ const stmts = {
   // Sync
   upsertLog: db.prepare(`
     INSERT INTO logs (id, logged_at, title, tag_name, team, docs_url, type, status, tag_mismatch, is_deleted, synced_at)
-    VALUES (@id, @logged_at, @title, @tag_name, @team, @docs_url, @type, @status, @tag_mismatch, 0, datetime('now'))
+    VALUES (@id, @logged_at, @title, @tag_name, lower(@team), @docs_url, @type, @status, @tag_mismatch, 0, datetime('now'))
     ON CONFLICT(id) DO UPDATE SET
       title = excluded.title,
       tag_name = excluded.tag_name,
-      team = excluded.team,
+      team = lower(excluded.team),
       type = excluded.type,
       status = excluded.status,
       tag_mismatch = excluded.tag_mismatch,

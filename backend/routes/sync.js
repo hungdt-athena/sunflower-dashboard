@@ -50,19 +50,22 @@ function linkReviewToRaw(row) {
   const rawRow = stmts.findRawByDocsUrl.get({ docs_url: row.docs_url });
   if (!rawRow) return;
 
-  // Check date match for confidence level
+  // reviewed.status contains the date the raw was logged (dd/MM/yyyy or with time)
+  // Use this as the "reviewed_at" moment for accurate review_hours calculation.
+  // If status isn't parseable, fall back to row.logged_at (when the reviewed entry was logged).
   const statusDate = parseDateFromStatus(row.status);
   const dateMatch = datesMatch(rawRow.logged_at, statusDate);
   const confidence = dateMatch ? 'full' : 'partial';
 
+  const reviewedAtIso = statusDate || row.logged_at;
   const rawTime = new Date(rawRow.logged_at).getTime();
-  const reviewTime = new Date(row.logged_at).getTime();
+  const reviewTime = new Date(reviewedAtIso).getTime();
   const reviewHours = (reviewTime - rawTime) / (1000 * 60 * 60);
 
   stmts.updateReviewLink.run({
     id: row.id,
     raw_logged_at: rawRow.logged_at,
-    reviewed_at: row.logged_at,
+    reviewed_at: reviewedAtIso,
     review_hours: Math.round(reviewHours * 100) / 100,
     is_sla_breach: reviewHours > 4 ? 1 : 0,
     link_confidence: confidence,
