@@ -180,7 +180,7 @@
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="needConfirm">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       Unconfirmed
                       <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span id="tooltip-unconfirmed" class="tooltip-content z-50">Total number of unconfirmed meetings in the selected time range for the selected team.</span></span>
                     </p>
@@ -195,7 +195,7 @@
             <!-- Avg Review -->
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all relative group">
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       Avg Review
                       <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Average time taken to complete a review.</span></span>
                     </p>
@@ -210,7 +210,7 @@
             <!-- Median Review -->
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all relative group">
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       Median Review
                       <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Median time taken to complete a review.</span></span>
                     </p>
@@ -224,7 +224,7 @@
             <!-- Velocity -->
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 hover:z-50 transition-all relative group">
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       Velocity
                       <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Number of meetings reviewed per day.</span></span>
                     </p>
@@ -243,7 +243,7 @@
             <div class="bg-rose-50/50 border border-rose-200 p-5 rounded-xl shadow-sm hover:border-rose-400 hover:z-50 transition-all cursor-pointer stat-clickable relative group" data-stat="slabreach">
                 <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-rose-700 text-xs font-bold uppercase tracking-wider flex items-center z-10 relative">
+                    <p class="text-rose-700 text-xs font-bold uppercase tracking-wider flex items-center z-30 relative">
                       SLA Breach
                       <span class="tooltip-wrapper tooltip-bottom"><span class="material-symbols-outlined text-rose-500 opacity-60 tooltip-icon">help</span><span id="tooltip-slabreach" class="tooltip-content z-50">Total number of reviews exceeding the 4-hour standard timeframe.</span></span>
                     </p>
@@ -329,7 +329,7 @@
                       <div class="font-bold text-slate-500 text-[10px] uppercase tracking-wider mb-1 ml-1">Raw Logged</div>
                       <div class="w-full bg-slate-100 rounded-lg overflow-hidden h-7 flex shadow-inner relative">
                         <div id="funnel-raw-bar" class="h-full bg-blue-500 flex items-center px-3 font-bold text-white text-[11px] whitespace-nowrap transition-all duration-1000" style="width: 100%">
-                          <span id="funnel-raw-count">-</span><span class="ml-1.5 opacity-80">(100%)</span>
+                          <span id="funnel-raw-count">-</span>
                         </div>
                       </div>
                     </div>
@@ -344,7 +344,7 @@
                       <div class="font-bold text-slate-500 text-[10px] uppercase tracking-wider mb-1 ml-1">Confirmed</div>
                       <div class="w-full bg-slate-100 rounded-lg overflow-hidden h-7 flex shadow-inner relative">
                         <div id="funnel-confirm-bar" class="h-full bg-amber-500 flex items-center px-3 font-bold text-white text-[11px] whitespace-nowrap transition-all duration-1000" style="width: 0%">
-                          <span id="funnel-confirm-count">-</span><span id="funnel-confirm-pct" class="ml-1.5 opacity-80">(0%)</span>
+                          <span id="funnel-confirm-count">-</span>
                         </div>
                       </div>
                     </div>
@@ -359,7 +359,7 @@
                       <div class="font-bold text-slate-500 text-[10px] uppercase tracking-wider mb-1 ml-1">Reviewed</div>
                       <div class="w-full bg-slate-100 rounded-lg overflow-hidden h-7 flex shadow-inner relative">
                         <div id="funnel-review-bar" class="h-full bg-emerald-500 flex items-center px-3 font-bold text-white text-[11px] whitespace-nowrap transition-all duration-1000" style="width: 0%">
-                          <span id="funnel-review-count">-</span><span id="funnel-review-pct" class="ml-1.5 opacity-80">(0%)</span>
+                          <span id="funnel-review-count">-</span>
                         </div>
                       </div>
                     </div>

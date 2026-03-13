@@ -5,10 +5,8 @@ const LeaderboardSection = {
     rawCount: document.getElementById('funnel-raw-count'),
     confBar: document.getElementById('funnel-confirm-bar'),
     confCount: document.getElementById('funnel-confirm-count'),
-    confPct: document.getElementById('funnel-confirm-pct'),
     revBar: document.getElementById('funnel-review-bar'),
     revCount: document.getElementById('funnel-review-count'),
-    revPct: document.getElementById('funnel-review-pct'),
     cRate: document.getElementById('funnel-c-rate'),
     rRate: document.getElementById('funnel-r-rate')
   },
@@ -49,9 +47,6 @@ const LeaderboardSection = {
     const max = funnel.raw || 1;
     this.elements.confBar.style.width = Math.max((funnel.confirmed / max) * 100, 2) + '%';
     this.elements.revBar.style.width = Math.max((funnel.reviewed / max) * 100, 2) + '%';
-    
-    this.elements.confPct.textContent = Format.percent(funnel.confirmed, funnel.raw);
-    this.elements.revPct.textContent = Format.percent(funnel.reviewed, funnel.raw);
     
     this.elements.cRate.textContent = `${funnel.confirmRate}% Conversion`;
     this.elements.rRate.textContent = `${funnel.reviewRate}% Conversion`;

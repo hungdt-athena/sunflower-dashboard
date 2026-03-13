@@ -302,8 +302,14 @@ const TrendsSection = {
   },
 
   renderCycleTimeChart(data) {
-    const ctx = document.getElementById('chart-cycle-time').getContext('2d');
+    const canvas = document.getElementById('chart-cycle-time');
+    const ctx = canvas.getContext('2d');
     if (this.charts.cycle) this.charts.cycle.destroy();
+
+    // Adjust container height dynamically based on the number of teams
+    const container = canvas.parentElement;
+    const calculatedHeight = Math.max(300, data.length * 40);
+    container.style.height = `${calculatedHeight}px`;
 
     this.charts.cycle = new Chart(ctx, {
       type: 'bar',
@@ -324,6 +330,7 @@ const TrendsSection = {
       },
       options: {
         indexAxis: 'y',
+        maintainAspectRatio: false,
         plugins: {
           legend: { position: 'bottom' }
         },
