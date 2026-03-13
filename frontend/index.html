@@ -172,8 +172,8 @@
       
       <!-- TAB 1: KPIs & Activity -->
       <div id="tab-kpis" class="tab-pane space-y-8 block">
-        <!-- KPI Row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- KPI Framework Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             
             <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-all cursor-pointer stat-clickable relative group" data-stat="total">
                 <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -251,15 +251,10 @@
                 </div>
                 <div class="flex items-end justify-between mt-3 z-10 relative">
                     <p class="text-3xl font-bold text-rose-600" id="stat-sla-pct">-%</p>
-                    <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 opacity-80" id="stat-sla-count">0 / 0 Reviews</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Time Stats Row -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 relative">
+                    <p class="text-[10px] font-bold text-rose-500 uppercase tracking        <!-- Time Stats Row (Row 2, spanning 4 cols) -->
+        <div class="lg:col-span-4 bg-white border border-slate-200 rounded-xl shadow-sm p-6 relative flex flex-col justify-center">
           <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50 to-transparent pointer-events-none rounded-xl"></div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative z-10">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative z-10 w-full">
             <div class="flex flex-col items-center justify-center p-2">
               <p class="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Average Review
@@ -289,51 +284,58 @@
           </div>
         </div>
 
-        <!-- Funnel Only -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Funnel -->
-          <div class="flex flex-col">
-             <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-blue-500 text-[20px]">filter_alt</span>
+        <!-- Funnel Only (Row 2, spanning 1 col, right below SLA Breach) -->
+        <div class="lg:col-span-1 bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex flex-col justify-center">
+            <h3 class="text-slate-900 text-sm font-bold mb-3 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <span class="material-symbols-outlined text-blue-500 text-[18px]">filter_alt</span>
                 Meeting Funnel
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content">Tỉ lệ chuyển đổi ở các bước: Meeting thô -> Khớp Team -> Hoàn thành.</span></span>
-             </h3>
-             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-8 flex-1 flex flex-col justify-center space-y-5">
-                <div class="flex items-center">
-                  <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Raw Logged</div>
-                  <div class="flex-1 bg-slate-100 rounded-lg overflow-hidden h-9 flex border border-slate-200 shadow-inner relative">
-                    <div id="funnel-raw-bar" class="h-full bg-blue-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] relative z-10" style="width: 100%">
-                      <span id="funnel-raw-count">-</span><span class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(100%)</span>
+            </h3>
+            <div class="flex-1 flex flex-col justify-center mt-1">
+                <!-- Raw -->
+                <div class="flex flex-col">
+                  <div class="font-bold text-slate-500 text-[10px] uppercase tracking-wider mb-1 ml-1">Raw Logged</div>
+                  <div class="w-full bg-slate-100 rounded-lg overflow-hidden h-7 flex shadow-inner relative">
+                    <div id="funnel-raw-bar" class="h-full bg-blue-500 flex items-center px-3 font-bold text-white text-[11px] whitespace-nowrap transition-all duration-1000" style="width: 100%">
+                      <span id="funnel-raw-count">-</span><span class="ml-1.5 opacity-80">(100%)</span>
                     </div>
                   </div>
                 </div>
-                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-10 flex flex-col justify-center">
-                  <span id="funnel-c-rate" class="badge bg-secondary ml-4 self-start">-% Conversion</span>
-                  <span class="text-[10px] text-slate-500 font-medium ml-4 mt-1">Avg Waiting Time: <span id="funnel-avg-confirm" class="font-bold text-slate-700">-</span></span>
+
+                <!-- Spacer + Conv -->
+                <div class="ml-3 pl-3.5 border-l-[1.5px] border-dashed border-slate-300 flex flex-col justify-center h-10 my-0.5 relative">
+                  <span id="funnel-c-rate" class="badge bg-secondary self-start text-[10px] px-1.5 py-0 shadow-sm leading-tight border border-slate-200 absolute -left-1 opacity-90" style="top: 5px;">-%</span>
+                  <span class="text-[10px] text-slate-400 font-medium ml-8 leading-none mt-1">Wait: <span id="funnel-avg-confirm" class="font-bold text-slate-600">-</span></span>
                 </div>
-                <div class="flex items-center">
-                  <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Confirmed</div>
-                  <div class="flex-1 bg-slate-100 rounded-lg overflow-hidden h-9 flex border border-slate-200 shadow-inner relative">
-                    <div id="funnel-confirm-bar" class="h-full bg-amber-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] relative z-10" style="width: 0%">
-                      <span id="funnel-confirm-count">-</span><span id="funnel-confirm-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
+
+                <!-- Confirmed -->
+                <div class="flex flex-col">
+                  <div class="font-bold text-slate-500 text-[10px] uppercase tracking-wider mb-1 ml-1">Confirmed</div>
+                  <div class="w-full bg-slate-100 rounded-lg overflow-hidden h-7 flex shadow-inner relative">
+                    <div id="funnel-confirm-bar" class="h-full bg-amber-500 flex items-center px-3 font-bold text-white text-[11px] whitespace-nowrap transition-all duration-1000" style="width: 0%">
+                      <span id="funnel-confirm-count">-</span><span id="funnel-confirm-pct" class="ml-1.5 opacity-80">(0%)</span>
                     </div>
                   </div>
                 </div>
-                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-10 flex flex-col justify-center">
-                  <span id="funnel-r-rate" class="badge bg-secondary ml-4 self-start">-% Conversion</span>
-                  <span class="text-[10px] text-slate-500 font-medium ml-4 mt-1">Avg Waiting Time: <span id="funnel-avg-review" class="font-bold text-slate-700">-</span></span>
+
+                <!-- Spacer + Conv -->
+                <div class="ml-3 pl-3.5 border-l-[1.5px] border-dashed border-slate-300 flex flex-col justify-center h-10 my-0.5 relative">
+                  <span id="funnel-r-rate" class="badge bg-secondary self-start text-[10px] px-1.5 py-0 shadow-sm leading-tight border border-slate-200 absolute -left-1 opacity-90" style="top: 5px;">-%</span>
+                  <span class="text-[10px] text-slate-400 font-medium ml-8 leading-none mt-1">Wait: <span id="funnel-avg-review" class="font-bold text-slate-600">-</span></span>
                 </div>
-                <div class="flex items-center">
-                  <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Reviewed</div>
-                  <div class="flex-1 bg-slate-100 rounded-lg overflow-hidden h-9 flex border border-slate-200 shadow-inner relative">
-                    <div id="funnel-review-bar" class="h-full bg-emerald-500 flex items-center px-4 font-bold text-white transition-all duration-1000 shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] relative z-10" style="width: 0%">
-                      <span id="funnel-review-count">-</span><span id="funnel-review-pct" class="ml-2 font-semibold text-[10px] opacity-80 mt-0.5 tracking-wider">(0%)</span>
+
+                <!-- Reviewed -->
+                <div class="flex flex-col">
+                  <div class="font-bold text-slate-500 text-[10px] uppercase tracking-wider mb-1 ml-1">Reviewed</div>
+                  <div class="w-full bg-slate-100 rounded-lg overflow-hidden h-7 flex shadow-inner relative">
+                    <div id="funnel-review-bar" class="h-full bg-emerald-500 flex items-center px-3 font-bold text-white text-[11px] whitespace-nowrap transition-all duration-1000" style="width: 0%">
+                      <span id="funnel-review-count">-</span><span id="funnel-review-pct" class="ml-1.5 opacity-80">(0%)</span>
                     </div>
                   </div>
                 </div>
-             </div>
-          </div>
-          <!-- Right side is deliberately left empty, but gives natural padding to conversion funnel -->
+            </div>
+        </div>
+
+        </div> <!-- End of KPI Framework Row Grid -->
         <div id="all-teams-charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 hidden">
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
@@ -345,7 +347,7 @@
           </div>
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Status Breakdown (100% Stacked)
+              Status Breakdown
             </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-status-stacked"></canvas>

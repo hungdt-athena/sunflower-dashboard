@@ -34,6 +34,56 @@ const TrendsSection = {
     const ctx = document.getElementById('chart-pie-dist').getContext('2d');
     if (this.charts.pie) this.charts.pie.destroy();
 
+    const total = data.reduce((a, b) => a + b.count, 0);
+
+    const pieLabelsPlugin = {
+      id: 'pieLabels',
+      afterDraw(chart) {
+        if (chart.config.type !== 'doughnut') return;
+        const ctx = chart.ctx;
+        const meta = chart.getDatasetMeta(0);
+        const dataArr = chart.data.datasets[0].data;
+        
+        ctx.save();
+        ctx.font = '11px sans-serif';
+        ctx.textBaseline = 'middle';
+
+        meta.data.forEach((element, index) => {
+          if (index >= 5) return; // Only top 5
+          const val = dataArr[index];
+          if (!val) return;
+          const pct = Math.round((val / total) * 100);
+          const labelText = `${chart.data.labels[index]} (${val} - ${pct}%)`;
+
+          const midAngle = element.startAngle + (element.endAngle - element.startAngle) / 2;
+          const radius = element.outerRadius;
+          const x = chart.chartArea.left + chart.chartArea.width / 2;
+          const y = chart.chartArea.top + chart.chartArea.height / 2;
+          
+          const extra = 20;
+          const startX = x + Math.cos(midAngle) * radius;
+          const startY = y + Math.sin(midAngle) * radius;
+          const midX = x + Math.cos(midAngle) * (radius + extra);
+          const midY = y + Math.sin(midAngle) * (radius + extra);
+          
+          const alignRight = Math.cos(midAngle) > 0;
+          const endX = midX + (alignRight ? 20 : -20);
+          
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.lineTo(midX, midY);
+          ctx.lineTo(endX, midY);
+          ctx.strokeStyle = '#94a3b8';
+          ctx.stroke();
+
+          ctx.fillStyle = '#475569';
+          ctx.textAlign = alignRight ? 'left' : 'right';
+          ctx.fillText(labelText, endX + (alignRight ? 5 : -5), midY);
+        });
+        ctx.restore();
+      }
+    };
+
     this.charts.pie = new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -45,10 +95,21 @@ const TrendsSection = {
           borderColor: '#ffffff'
         }]
       },
+      plugins: [pieLabelsPlugin],
       options: {
-        cutout: '60%',
+        cutout: '55%',
+        layout: { padding: 40 },
         plugins: {
-          legend: { position: 'right' }
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const val = ctx.raw;
+                const pct = Math.round((val / total) * 100);
+                return ` ${ctx.label}: ${val} (${pct}%)`;
+              }
+            }
+          }
         }
       }
     });
@@ -58,6 +119,12 @@ const TrendsSection = {
     const ctx = document.getElementById('chart-status-stacked').getContext('2d');
     if (this.charts.stacked) this.charts.stacked.destroy();
 
+    const rawData = {
+      unconfirmed: data.map(d => d.unconfirmed),
+      unreviewed: data.map(d => d.unreviewed),
+      reviewed: data.map(d => d.reviewed)
+    };
+
     this.charts.stacked = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -65,48 +132,49 @@ const TrendsSection = {
         datasets: [
           {
             label: 'Unconfirmed',
-            data: data.map(d => d.unconfirmed),
-            backgroundColor: '#fb7185' // rose-400
+            data: [], // populated below
+            rawValues: rawData.unconfirmed,
+            backgroundColor: '#ef4444' // red-500
           },
           {
-            label: 'Unreviewed',
-            data: data.map(d => d.unreviewed),
-            backgroundColor: '#fbbf24' // amber-400
+            label: 'Unreviewed (In Queue)',
+            data: [], // populated below
+            rawValues: rawData.unreviewed,
+            backgroundColor: '#f59e0b' // amber-500
           },
           {
             label: 'Reviewed',
-            data: data.map(d => d.reviewed),
-            backgroundColor: '#34d399' // emerald-400
+            data: [], // populated below
+            rawValues: rawData.reviewed,
+            backgroundColor: '#10b981' // emerald-500
           }
         ]
       },
       options: {
         indexAxis: 'x',
         plugins: {
-          legend: { position: 'bottom' },
+          legend: { position: 'bottom', reverse: true },
           tooltip: {
             callbacks: {
               label: (ctx) => {
-                const total = ctx.dataset.data.reduce((a,b) => a+b, 0); // Need total for the team
-                return `${ctx.dataset.label}: ${ctx.raw}`;
+                const realValue = ctx.dataset.rawValues[ctx.dataIndex];
+                return `${ctx.dataset.label}: ${realValue} meeting(s) (${ctx.raw}%)`;
               }
             }
           }
         },
         scales: {
           x: { stacked: true },
-          y: { stacked: true, max: 100 } // Wait, user said 100% stacked
+          y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } }
         }
       }
     });
 
-    // To make it 100% stacked, we actually need to calculate percentages
-    // Let's modify data arrays
+    // Populate 100% stacked percentages
     const totals = data.map(d => (d.unconfirmed + d.unreviewed + d.reviewed) || 1);
-    
-    this.charts.stacked.data.datasets[0].data = data.map((d, i) => Math.round((d.unconfirmed / totals[i]) * 100));
-    this.charts.stacked.data.datasets[1].data = data.map((d, i) => Math.round((d.unreviewed / totals[i]) * 100));
-    this.charts.stacked.data.datasets[2].data = data.map((d, i) => Math.round((d.reviewed / totals[i]) * 100));
+    this.charts.stacked.data.datasets[0].data = rawData.unconfirmed.map((v, i) => Math.round((v / totals[i]) * 100) || 0);
+    this.charts.stacked.data.datasets[1].data = rawData.unreviewed.map((v, i) => Math.round((v / totals[i]) * 100) || 0);
+    this.charts.stacked.data.datasets[2].data = rawData.reviewed.map((v, i) => Math.round((v / totals[i]) * 100) || 0);
     this.charts.stacked.update();
   },
 
