@@ -25,12 +25,6 @@ const StatsSection = {
     this.elements.total.textContent = data.totalMeeting;
     
     this.elements.rereviewed.textContent = `${data.reReviewed} re-rev`;
-    if (range === 'all') {
-      this.elements.rereviewRate.parentElement.style.opacity = '0';
-    } else {
-      this.elements.rereviewRate.parentElement.style.opacity = '1';
-      this.elements.rereviewRate.textContent = `${data.reReviewRate}%`;
-    }
     this.elements.rawdup.textContent = `${data.rawDup} dup`;
     
     if (data.tagMismatch > 0) {

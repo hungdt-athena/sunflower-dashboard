@@ -209,7 +209,6 @@
                 <div class="flex items-end justify-between mt-3 z-10 relative">
                     <p class="text-3xl font-bold text-slate-800 summary-green" id="stat-reviewed">-</p>
                     <div class="text-right flex flex-col items-end gap-1 mb-1">
-                      <p class="text-[10px] text-slate-400 font-bold tracking-wide">Rate: <span id="stat-rereview-rate" class="text-slate-600">0%</span></p>
                       <span id="stat-rereviewed" class="badge bg-secondary">0 re-rev</span>
                     </div>
                 </div>
@@ -312,8 +311,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-6 flex items-center">
-                  <span id="funnel-c-rate" class="badge bg-secondary ml-4">-% Conversion</span>
+                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-10 flex flex-col justify-center">
+                  <span id="funnel-c-rate" class="badge bg-secondary ml-4 self-start">-% Conversion</span>
+                  <span class="text-[10px] text-slate-500 font-medium ml-4 mt-1">Avg Waiting Time: <span id="funnel-avg-confirm" class="font-bold text-slate-700">-</span></span>
                 </div>
                 <div class="flex items-center">
                   <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Confirmed</div>
@@ -323,8 +323,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-6 flex items-center">
-                  <span id="funnel-r-rate" class="badge bg-secondary ml-4">-% Conversion</span>
+                <div class="ml-32 pl-4 border-l-2 border-dashed border-slate-300 h-10 flex flex-col justify-center">
+                  <span id="funnel-r-rate" class="badge bg-secondary ml-4 self-start">-% Conversion</span>
+                  <span class="text-[10px] text-slate-500 font-medium ml-4 mt-1">Avg Waiting Time: <span id="funnel-avg-review" class="font-bold text-slate-700">-</span></span>
                 </div>
                 <div class="flex items-center">
                   <div class="w-32 font-bold text-slate-600 text-xs uppercase tracking-wider">Reviewed</div>
@@ -452,11 +453,11 @@
 
       <!-- TAB 3: Charts -->
       <div id="tab-charts" class="tab-pane space-y-8 hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Daily Reviews & Backlog
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Báo cáo tình hình xử lý công việc hằng ngày.</span></span>
+              Review Volume vs Backlog
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Lượng meeting đổ vào và được review xong (Area Chart).</span></span>
             </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
               <canvas id="chart-daily"></canvas>
@@ -464,20 +465,31 @@
           </div>
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Time Distribution
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Phân loại vòng đời hoàn thành (dưới 1h, 2h hoặc trên 4h).</span></span>
+              SLA Compliance Trend
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tỉ lệ hoàn thành đúng hạn SLA theo thời gian.</span></span>
             </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
-              <canvas id="chart-dist"></canvas>
+              <canvas id="chart-sla"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
+            <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+              Cycle Time Breakdown
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Phân rã thời gian nút thắt hiện tại theo team (Stacked Bar).</span></span>
+            </h3>
+            <div class="relative flex-1 w-full min-h-[300px]">
+              <canvas id="chart-cycle-time"></canvas>
             </div>
           </div>
           <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col">
             <h3 class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-              SLA Compliance
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tỉ lệ vi phạm SLA (thời gian quá dài) qua các ngày.</span></span>
+              Review Time Distribution
+              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Phân loại vòng đời hoàn thành đánh giá.</span></span>
             </h3>
             <div class="relative flex-1 w-full min-h-[300px]">
-              <canvas id="chart-sla"></canvas>
+              <canvas id="chart-dist"></canvas>
             </div>
           </div>
         </div>

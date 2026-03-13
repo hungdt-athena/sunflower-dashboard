@@ -13,6 +13,12 @@ window.appData = {
     TrendsSection.init();
     Drilldown.init();
     
+    // Initial sync meta
+    const syncMeta = await API.fetchJSON('/sync/meta');
+    if (syncMeta && syncMeta.last_synced_at) {
+      this.updateSyncTime(syncMeta.last_synced_at);
+    }
+    
     this.renderAll();
   },
 
@@ -165,7 +171,17 @@ window.appData = {
   },
 
   updateSyncTime(time) {
-    document.getElementById('last-sync-time').textContent = `Syned: ${time ? Format.date(time) : 'Just now'}`;
+    if (!time) {
+      document.getElementById('last-sync-time').textContent = 'Initial Sync...';
+      return;
+    }
+    const date = new Date(time);
+    const HH = String(date.getHours()).padStart(2, '0');
+    const mm = String(date.getMinutes()).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const MM = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    document.getElementById('last-sync-time').textContent = `Data updated through ${HH}:${mm} ${dd}/${MM}/${yyyy}`;
   },
 
   setupSSE() {

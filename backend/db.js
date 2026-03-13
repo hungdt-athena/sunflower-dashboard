@@ -436,7 +436,18 @@ function getTrends(team, days = 30) {
     GROUP BY bucket
   `).all();
 
-  return { dailyReviews, dailySla, dailyRaw, reviewTimeDist };
+  // Cycle time breakdown by team
+  const cycleTimeByTeam = db.prepare(`
+    SELECT team, 
+      AVG(CASE WHEN status='pending' THEN (julianday('now') - julianday(logged_at))*24 ELSE null END) as avg_pending_hours,
+      AVG(CASE WHEN status='confirmed' THEN (julianday('now') - julianday(logged_at))*24 ELSE null END) as avg_confirmed_hours
+    FROM logs
+    WHERE is_deleted = 0 AND type = 'raw' AND status IN ('pending', 'confirmed') AND team != '' AND team IS NOT NULL
+    ${team !== 'all' ? `AND team = '${team}'` : ''}
+    GROUP BY team
+  `).all();
+
+  return { dailyReviews, dailySla, dailyRaw, reviewTimeDist, cycleTimeByTeam };
 }
 
 // ─── Leaderboard ───────────────────────────────────────
@@ -496,12 +507,17 @@ function getFunnel(team, range) {
   // Reviewed = raw meetings whose status was updated to 'reviewed'
   const reviewed  = db.prepare(`SELECT COUNT(*) as v ${base} AND type = 'raw' AND status = 'reviewed'`).get().v;
 
+  const avgWaitConfirm = db.prepare(`SELECT AVG((julianday('now') - julianday(logged_at)) * 24) as v ${base} AND type = 'raw' AND status = 'pending'`).get().v;
+  const avgWaitReview = db.prepare(`SELECT AVG((julianday('now') - julianday(logged_at)) * 24) as v ${base} AND type = 'raw' AND status = 'confirmed'`).get().v;
+
   return {
     raw,
     confirmed,
     reviewed,
     confirmRate: raw > 0 ? Math.round(confirmed / raw * 1000) / 10 : 0,
     reviewRate:  confirmed > 0 ? Math.round(reviewed / confirmed * 1000) / 10 : 0,
+    avgWaitConfirm: avgWaitConfirm !== null ? Math.round(avgWaitConfirm * 10) / 10 : null,
+    avgWaitReview: avgWaitReview !== null ? Math.round(avgWaitReview * 10) / 10 : null,
   };
 }
 

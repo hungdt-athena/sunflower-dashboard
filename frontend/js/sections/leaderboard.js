@@ -10,7 +10,9 @@ const LeaderboardSection = {
     revCount: document.getElementById('funnel-review-count'),
     revPct: document.getElementById('funnel-review-pct'),
     cRate: document.getElementById('funnel-c-rate'),
-    rRate: document.getElementById('funnel-r-rate')
+    rRate: document.getElementById('funnel-r-rate'),
+    avgConfirm: document.getElementById('funnel-avg-confirm'),
+    avgReview: document.getElementById('funnel-avg-review')
   },
 
   getMedal(rank) {
@@ -54,5 +56,8 @@ const LeaderboardSection = {
     
     this.elements.cRate.textContent = `${funnel.confirmRate}% Conversion`;
     this.elements.rRate.textContent = `${funnel.reviewRate}% Conversion`;
+
+    this.elements.avgConfirm.textContent = funnel.avgWaitConfirm !== null ? funnel.avgWaitConfirm + 'h' : '-';
+    this.elements.avgReview.textContent = funnel.avgWaitReview !== null ? funnel.avgWaitReview + 'h' : '-';
   }
 };
