@@ -1,9 +1,9 @@
 const Palette = {
   riskValues: {
-    'healthy': { color: 'var(--color-success)', bg: 'var(--color-success-bg)', label: '🟢' },
-    'watch':   { color: 'var(--color-amber)', bg: 'var(--color-amber-bg)', label: '🟡' },
-    'at-risk': { color: '#fb923c', bg: 'rgba(251, 146, 60, 0.1)', label: '🟠' },
-    'critical':{ color: 'var(--color-red)', bg: 'var(--color-red-bg)', label: '🔴' }
+    'healthy': { color: '#10b981', bg: 'rgba(16, 185, 129, 0.12)', label: '🟢' },
+    'watch':   { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)', label: '🟡' },
+    'at-risk': { color: '#fb923c', bg: 'rgba(251, 146, 60, 0.12)', label: '🟠' },
+    'critical':{ color: '#ef4444', bg: 'rgba(239, 68, 68, 0.12)',  label: '🔴' }
   },
 
   getRiskColor(band) {

@@ -51,8 +51,6 @@ const PendingSection = {
           <tr>
             <td><strong class="text-slate-800">${teamName}</strong></td>
             <td><span class="pending-count-badge">${info.count}</span></td>
-            <td>${slaHTML}</td>
-            <td><span class="badge ${prioClass} px-1.5">${info.priority || '—'}</span></td>
           </tr>
         `;
       }).join('');
