@@ -19,16 +19,20 @@ function emitSSE(req, data) {
  */
 function parseDateFromStatus(statusStr) {
   if (!statusStr) return null;
-  // Try dd/MM/yyyy or dd-MM-yyyy
-  const match = statusStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (!match) return null;
-  const [, dd, mm, yyyy] = match;
-  return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+  const m = statusStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:[\s\-]+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+  if (!m) return null;
+  const d = m[1].padStart(2, '0');
+  const mo = m[2].padStart(2, '0');
+  const y = m[3];
+  const h = (m[4] || '00').padStart(2, '0');
+  const min = (m[5] || '00').padStart(2, '0');
+  const s = (m[6] || '00').padStart(2, '0');
+  return `${y}-${mo}-${d}T${h}:${min}:${s}+07:00`;
 }
 
 function datesMatch(isoDate1, parsedDate2) {
   if (!isoDate1 || !parsedDate2) return false;
-  return isoDate1.substring(0, 10) === parsedDate2;
+  return isoDate1.substring(0, 10) === parsedDate2.substring(0, 10);
 }
 
 /**
