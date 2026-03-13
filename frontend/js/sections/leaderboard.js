@@ -24,17 +24,26 @@ const LeaderboardSection = {
     const leaders = await API.getLeaderboard(range);
     
     if (leaders.length === 0) {
-      this.elements.tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No data</td></tr>';
+      this.elements.tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No data</td></tr>';
     } else {
-      this.elements.tbody.innerHTML = leaders.slice(0, 10).map(l => `
+      this.elements.tbody.innerHTML = leaders.slice(0, 10).map(l => {
+        let avatarHTML = '';
+        if (l.team && typeof l.team === 'string' && l.team.length >= 2) {
+          const initial = l.team.substring(0, 2);
+          const hash = l.team.charCodeAt(0) + l.team.charCodeAt(l.team.length - 1);
+          const hue = hash * 137.508 % 360;
+          avatarHTML = `<span class="team-avatar" style="background-color: hsl(${hue}, 70%, 50%)">${initial}</span>`;
+        }
+        
+        return `
         <tr>
-          <td>${this.getMedal(l.rank)}</td>
-          <td class="text-left"><strong>${l.team}</strong></td>
-          <td>${l.reviewCount}</td>
-          <td>${l.medianHours}h</td>
-          <td>${l.cv} <span class="text-xs text-slate-400">(${Math.round(l.score*10)/10})</span></td>
+          <td class="text-center text-slate-600 font-medium">${this.getMedal(l.rank)}</td>
+          <td class="text-left font-bold text-slate-800"><div class="flex items-center">${avatarHTML}<span>${l.team}</span></div></td>
+          <td class="text-right">${l.reviewCount}</td>
+          <td class="text-right">${l.medianHours}h</td>
+          <td class="text-right">${l.cv} <span class="text-xs text-slate-400">(${Math.round(l.score*10)/10})</span></td>
         </tr>
-      `).join('');
+      `}).join('');
     }
 
     // 2. Funnel

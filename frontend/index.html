@@ -461,7 +461,7 @@
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
               <table class="data-table compact">
                 <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
-                  <tr><th>Team</th><th>Count</th></tr>
+                  <tr><th class="text-left">Team</th><th class="text-right">Count</th></tr>
                 </thead>
                 <tbody id="pending-unreviewed-tbody"></tbody>
               </table>
@@ -481,7 +481,7 @@
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
               <table class="data-table compact">
                 <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
-                  <tr><th>Team</th><th>Count</th></tr>
+                  <tr><th class="text-left">Team</th><th class="text-right">Count</th></tr>
                 </thead>
                 <tbody id="pending-unconfirmed-tbody"></tbody>
               </table>
@@ -499,20 +499,22 @@
                 Top Risk Teams
                 <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Cảnh báo rủi ro trễ hẹn xếp theo tính nghiêm trọng của team.</span></span>
               </h3>
-              <button class="text-primary text-xs font-bold hover:underline" onclick="document.getElementById('weights-modal').showModal()">Tweak Weights</button>
+              <button class="btn-tweak-weights" onclick="document.getElementById('weights-modal').showModal()">
+                <span class="material-symbols-outlined" style="font-size: 16px;">tune</span> Căn chỉnh Trọng số
+              </button>
             </div>
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
               <table class="data-table">
                 <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
                   <tr>
-                    <th>Team</th>
-                    <th>
+                    <th class="text-left">Team</th>
+                    <th class="text-right">
                       <span class="tooltip-wrapper tooltip-bottom" style="margin-left:0">Score
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
                         <span class="tooltip-content" style="white-space:pre-line;width:220px">Risk score tổng hợp từ nhiều chỉ số (SLA breach, unconfirmed, unreviewed, avg hours, re-review rate). Score càng cao = rủi ro càng lớn.</span>
                       </span>
                     </th>
-                    <th style="width: 45%">
+                    <th class="text-right" style="width: 45%">
                       <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0">Intensity
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
                         <span class="tooltip-content">Chiều dài bar thể hiện tỉ lệ score của team so với team có score cao nhất.</span>
@@ -537,14 +539,14 @@
               </h3>
             </div>
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
-              <table class="data-table compact text-center">
+              <table class="data-table compact">
                 <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
                   <tr>
-                    <th class="w-16">Rank</th>
+                    <th class="w-16 text-center">Rank</th>
                     <th class="text-left">Team</th>
-                    <th>Total Reviews</th>
-                    <th>Median Speed</th>
-                    <th>
+                    <th class="text-right">Total Reviews</th>
+                    <th class="text-right">Median Speed</th>
+                    <th class="text-right">
                       <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0">Consistency
                         <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
                         <span class="tooltip-content">Consistency Score = độ ổn định về tốc độ review. Score thấp hơn = ổn định hơn (CV thấp). Score trong ngoặc là điểm tổng hợp (median + consistency).</span>

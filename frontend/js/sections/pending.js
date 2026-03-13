@@ -49,8 +49,8 @@ const PendingSection = {
 
         return `
           <tr>
-            <td><strong class="text-slate-800">${teamName}</strong></td>
-            <td><span class="pending-count-badge">${info.count}</span></td>
+            <td class="text-left"><strong class="text-slate-800">${teamName}</strong></td>
+            <td class="text-right"><span class="pending-count-badge">${info.count}</span></td>
           </tr>
         `;
       }).join('');

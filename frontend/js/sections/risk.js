@@ -70,14 +70,29 @@ const RiskSection = {
       }
 
       const scoreTooltip = `Risk score tổng hợp từ:\n• SLA breach weight\n• Unconfirmed meetings\n• Unreviewed meetings\n• Avg review hours\n• Re-review rate\n\nScore càng cao = rủi ro càng lớn`;
-      const intensityTooltip = `Chiều dài bar = tỉ lệ score so với team cao nhất (${maxScore.toFixed(1)})\n${score.toFixed(1)} / ${maxScore.toFixed(1)} = ${wPct.toFixed(0)}%`;
+      const intensityTooltip = `Tỉ lệ rủi ro của team so với team có điểm cao nhất.\n\n${score.toFixed(1)} / ${maxScore.toFixed(1)} = ${wPct.toFixed(0)}%`;
+
+      // Build Segmented UI
+      const segmentCount = 10;
+      const activeSegments = Math.round((wPct / 100) * segmentCount);
+      let activeClass = '';
+      if (d.band === 'critical') activeClass = 'active-red';
+      else if (d.band === 'at-risk') activeClass = 'active-orange';
+      else if (d.band === 'watch') activeClass = 'active-yellow';
+      else activeClass = 'active-green';
+
+      let intensityHTML = `<div class="intensity-track">`;
+      for (let i = 0; i < segmentCount; i++) {
+        intensityHTML += `<div class="intensity-segment ${i < activeSegments ? activeClass : ''}"></div>`;
+      }
+      intensityHTML += `<span class="intensity-label">${wPct.toFixed(0)}%</span></div>`;
 
       return `
         <tr>
-          <td><strong>${d.team}</strong></td>
-          <td>
-            <div class="risk-score-wrapper flex items-center">
-              <span class="tooltip-wrapper" style="margin-left:0">
+          <td class="text-left"><strong class="text-slate-800">${d.team}</strong></td>
+          <td class="text-right">
+            <div class="risk-score-wrapper justify-end w-full">
+              <span class="tooltip-wrapper tooltip-bottom" style="margin-left:0">
                 <span class="score-badge mr-2" style="background: ${cBg}; color: white">${score.toFixed(1)}</span>
                 <span class="tooltip-content" style="white-space:pre-line;width:220px">${scoreTooltip}</span>
               </span>
@@ -85,12 +100,10 @@ const RiskSection = {
               ${trendHTML}
             </div>
           </td>
-          <td>
-            <span class="tooltip-wrapper" style="margin-left:0;display:block">
-              <div class="risk-bar-container">
-                <div class="risk-bar" style="width: ${wPct}%; background-color: ${cBg}"></div>
-              </div>
-              <span class="tooltip-content">${intensityTooltip}</span>
+          <td class="text-right">
+            <span class="tooltip-wrapper tooltip-bottom tooltip-right-align" style="margin-left:0;display:block">
+              ${intensityHTML}
+              <span class="tooltip-content" style="white-space:pre-line;">${intensityTooltip}</span>
             </span>
           </td>
         </tr>
