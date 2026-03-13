@@ -7,31 +7,75 @@ const HealthSection = {
     
     let html = '';
     
-    function renderList(title, list, formatter = null) {
-      if (!list || list.length === 0) return `<div class="health-item"><div class="health-label">${title}</div><div class="health-val text-muted">None</div></div>`;
-      let content = list.map(item => {
-        if (typeof item === 'string') return `<span>${item}</span>`;
-        const val = formatter ? formatter(item) : Object.values(item)[1];
-        return `<span><strong>${item.team}</strong> (${val})</span>`;
-      }).join(', ');
-      return `<div class="health-item"><div class="health-label">${title}</div><div class="health-val">${content}</div></div>`;
+    function teamBadge(name, extra, colorClass) {
+      const extraHtml = extra ? `<span class="hbadge-extra">${extra}</span>` : '';
+      return `<span class="health-team-badge ${colorClass}">${name}${extraHtml}</span>`;
     }
 
-    html += renderList('Most unconfirmed', data.mostUnconfirmed);
-    html += renderList('Most unreviewed', data.mostUnreviewed);
-    html += renderList('High SLA >20%', data.highSla, item => `${Format.number(item.pct)}%`);
-    
-    html += renderList('Potential Breachers (SLA >80%)', data.potentialBreachers);
-    html += renderList('Gaps vs Benchmark', data.benchmarkGaps, item => `<span class="text-rose-500">+${item.gapPct}% slower</span>`);
-
-    if (data.critical.length > 0) {
-      html += `<div class="health-item"><div class="health-label summary-red">🔴 Critical Teams</div><div class="health-val text-xs"><strong>${data.critical.join(', ')}</strong></div></div>`;
-    } else {
-      html += `<div class="health-item"><div class="health-label summary-green">🟢 Critical Teams</div><div class="health-val text-muted text-xs">None</div></div>`;
+    function renderCard(title, icon, colorAccent, content, isEmpty) {
+      return `
+        <div class="health-card ${colorAccent}">
+          <div class="health-card-header">
+            <span class="health-card-icon">${icon}</span>
+            <span class="health-card-title">${title}</span>
+          </div>
+          <div class="health-card-body ${isEmpty ? 'health-empty' : ''}">
+            ${isEmpty ? '—' : content}
+          </div>
+        </div>`;
     }
 
-    html += renderList('No reviews', data.noReviews);
-    html += `<div class="health-item"><div class="health-label">🕰️ Stale Items (>7d)</div><div class="health-val">${data.staleItems > 0 ? `<strong class="summary-red">${data.staleItems}</strong> items` : '<span class="summary-green">0 items</span>'}</div></div>`;
+    // Most Unconfirmed
+    const unc = data.mostUnconfirmed;
+    html += renderCard('Most Unconfirmed', '🚨', 'hcard-rose',
+      unc && unc.length ? unc.map(i => teamBadge(typeof i === 'string' ? i : i.team, typeof i === 'string' ? null : Object.values(i)[1], 'hbadge-rose')).join('') : null,
+      !unc || !unc.length);
+
+    // Most Unreviewed
+    const unr = data.mostUnreviewed;
+    html += renderCard('Most Unreviewed', '⏳', 'hcard-amber',
+      unr && unr.length ? unr.map(i => teamBadge(typeof i === 'string' ? i : i.team, typeof i === 'string' ? null : Object.values(i)[1], 'hbadge-amber')).join('') : null,
+      !unr || !unr.length);
+
+    // High SLA >20%
+    const sla = data.highSla;
+    html += renderCard('High SLA >20%', '📊', 'hcard-orange',
+      sla && sla.length ? sla.map(i => teamBadge(i.team, `${Format.number(i.pct)}%`, 'hbadge-orange')).join('') : null,
+      !sla || !sla.length);
+
+    // Potential Breachers
+    const br = data.potentialBreachers;
+    html += renderCard('Potential Breachers (SLA >80%)', '⚠️', 'hcard-red',
+      br && br.length ? br.map(i => teamBadge(typeof i === 'string' ? i : i.team, null, 'hbadge-red')).join('') : null,
+      !br || !br.length);
+
+    // Gaps vs Benchmark
+    const gaps = data.benchmarkGaps;
+    html += renderCard('Gaps vs Benchmark', '📉', 'hcard-indigo',
+      gaps && gaps.length ? gaps.map(i => teamBadge(i.team, `+${i.gapPct}% slower`, 'hbadge-indigo')).join('') : null,
+      !gaps || !gaps.length);
+
+    // Critical Teams
+    const isCritical = data.critical && data.critical.length > 0;
+    html += renderCard('Critical Teams', '🔴', isCritical ? 'hcard-red' : 'hcard-green',
+      isCritical
+        ? data.critical.map(t => teamBadge(t, null, 'hbadge-red')).join('')
+        : '<span class="health-all-clear">✅ All clear</span>',
+      false);
+
+    // No Reviews
+    const noRev = data.noReviews;
+    html += renderCard('No Reviews', '😴', 'hcard-slate',
+      noRev && noRev.length ? noRev.map(i => teamBadge(typeof i === 'string' ? i : i.team, null, 'hbadge-slate')).join('') : null,
+      !noRev || !noRev.length);
+
+    // Stale Items
+    const stale = data.staleItems || 0;
+    html += renderCard('Stale Items (>7d)', '🕰️', stale > 0 ? 'hcard-red' : 'hcard-green',
+      stale > 0
+        ? `<span class="health-stale-count">${stale}</span><span class="health-stale-label"> items &gt;7 days old</span>`
+        : '<span class="health-all-clear">✅ No stale items</span>',
+      false);
 
     this.element.innerHTML = html;
   }

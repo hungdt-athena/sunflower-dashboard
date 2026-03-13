@@ -433,22 +433,66 @@
 
       <!-- TAB 2: Health & Risk -->
       <div id="tab-health" class="tab-pane space-y-8 hidden">
+        
+        <!-- ROW 1: Health Parameters (full width) -->
+        <div>
+          <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
+            Health Parameters
+            <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tình hình sức khoẻ của từng team: tồn đọng, vi phạm SLA, khoảng cách benchmark...</span></span>
+          </h3>
+          <div id="health-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div class="loading text-slate-500 text-sm col-span-4">Loading health parameters...</div>
+          </div>
+        </div>
+
+        <!-- ROW 2: Pending Lists (Unreviewed + Unconfirmed) -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          <!-- Health Summary -->
-          <div class="flex flex-col">
-            <h3 class="text-slate-900 text-[17px] font-bold mb-4 flex items-center gap-2">
-              <span class="material-symbols-outlined text-emerald-500 text-[20px]">health_metrics</span>
-              Health Parameters
-              <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Tình hình sức khoẻ kết nối Backend N8N, lượng báo cáo ngày...</span></span>
-            </h3>
-            <div id="health-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-              <div class="loading text-slate-500 text-sm col-span-2">Loading health parameters...</div>
+          <!-- Unreviewed Queue -->
+          <div class="flex flex-col h-[280px]">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
+                Most Unreviewed by Team
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Danh sách team tồn đọng reviews nhiều nhất, sắp xếp từ cao tới thấp. Worst-case SLA của mỗi team được hiển thị.</span></span>
+              </h3>
+              <span class="badge bg-amber">Confirmed</span>
+            </div>
+            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+              <table class="data-table compact">
+                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
+                  <tr><th>Team</th><th>Count</th><th>Worst SLA</th><th>Priority</th></tr>
+                </thead>
+                <tbody id="pending-unreviewed-tbody"></tbody>
+              </table>
             </div>
           </div>
 
-          <!-- Risk Teams Table -->
-          <div class="flex flex-col h-[500px]">
+          <!-- Unconfirmed Actions -->
+          <div class="flex flex-col h-[280px]">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
+                Most Unconfirmed by Team
+                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Danh sách team có nhiều meetings thô chưa được xác nhận nhất, sắp xếp từ cao tới thấp.</span></span>
+              </h3>
+              <span class="badge bg-red">Raw</span>
+            </div>
+            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
+              <table class="data-table compact">
+                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
+                  <tr><th>Team</th><th>Count</th><th>Worst SLA</th><th>Priority</th></tr>
+                </thead>
+                <tbody id="pending-unconfirmed-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 3: Risk Teams + Leaderboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Top Risk Teams -->
+          <div class="flex flex-col h-[400px]">
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-rose-500 text-[20px]">warning</span>
@@ -460,7 +504,21 @@
             <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar relative">
               <table class="data-table">
                 <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
-                  <tr><th>Team</th><th>Score</th><th style="width: 50%">Intensity</th></tr>
+                  <tr>
+                    <th>Team</th>
+                    <th>
+                      <span class="tooltip-wrapper" style="margin-left:0">Score
+                        <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
+                        <span class="tooltip-content" style="white-space:pre-line;width:220px">Risk score tổng hợp từ nhiều chỉ số (SLA breach, unconfirmed, unreviewed, avg hours, re-review rate). Score càng cao = rủi ro càng lớn.</span>
+                      </span>
+                    </th>
+                    <th style="width: 45%">
+                      <span class="tooltip-wrapper" style="margin-left:0">Intensity
+                        <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
+                        <span class="tooltip-content">Chiều dài bar thể hiện tỉ lệ score của team so với team có score cao nhất.</span>
+                      </span>
+                    </th>
+                  </tr>
                 </thead>
                 <tbody id="risk-tbody">
                   <tr><td colspan="3" class="text-center text-slate-500 text-sm italic">Loading risk scores...</td></tr>
@@ -468,54 +526,9 @@
               </table>
             </div>
           </div>
-        </div>
 
-        <!-- Pending Lists -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Unreviewed -->
-          <div class="flex flex-col h-[320px]">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
-                <span class="material-symbols-outlined text-amber-500 text-[20px]">hourglass_top</span>
-                Unreviewed Queue
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Danh sách các nhóm tồn đọng những reviews cần thực hiện nhất.</span></span>
-              </h3>
-              <span class="badge bg-amber">Confirmed</span>
-            </div>
-            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
-              <table class="data-table compact">
-                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
-                  <tr><th>Meeting</th><th>Team</th><th>SLA</th><th>Priority</th></tr>
-                </thead>
-                <tbody id="pending-unreviewed-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Unconfirmed -->
-          <div class="flex flex-col h-[320px]">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
-                <span class="material-symbols-outlined text-rose-500 text-[20px]">crisis_alert</span>
-                Unconfirmed Actions
-                <span class="tooltip-wrapper"><span class="material-symbols-outlined tooltip-icon">help</span><span class="tooltip-content z-50">Các meeting thô từ Google Drive chưa được xác nhận.</span></span>
-              </h3>
-              <span class="badge bg-red">Raw</span>
-            </div>
-            <div class="table-container flex-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-y-auto custom-scrollbar">
-              <table class="data-table compact">
-                <thead class="bg-white/90 backdrop-blur-md sticky top-0 z-10">
-                  <tr><th>Meeting</th><th>Team</th><th>SLA</th><th>Priority</th></tr>
-                </thead>
-                <tbody id="pending-unconfirmed-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Leaderboard -->
-          <div class="flex flex-col h-[350px]">
+          <!-- Fast Review Leaderboard -->
+          <div class="flex flex-col h-[400px]">
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-slate-900 text-[17px] font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-yellow-500 text-[20px]">emoji_events</span>
@@ -531,7 +544,12 @@
                     <th class="text-left">Team</th>
                     <th>Total Reviews</th>
                     <th>Median Speed</th>
-                    <th>Consistency (Score)</th>
+                    <th>
+                      <span class="tooltip-wrapper" style="margin-left:0">Consistency
+                        <span class="material-symbols-outlined tooltip-icon" style="font-size:13px;margin-left:4px">help</span>
+                        <span class="tooltip-content">Consistency Score = độ ổn định về tốc độ review. Score thấp hơn = ổn định hơn (CV thấp). Score trong ngoặc là điểm tổng hợp (median + consistency).</span>
+                      </span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody id="leaderboard-tbody"></tbody>
@@ -541,6 +559,7 @@
         </div>
 
       </div>
+
 
     </div>
   </main>

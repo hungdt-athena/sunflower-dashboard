@@ -306,25 +306,32 @@ const TrendsSection = {
     const ctx = canvas.getContext('2d');
     if (this.charts.cycle) this.charts.cycle.destroy();
 
+    // Sort teams by total cycle time descending (highest on top for horizontal bar)
+    const sorted = [...data].sort((a, b) => {
+      const totalA = (a.avg_pending_hours || 0) + (a.avg_confirmed_hours || 0);
+      const totalB = (b.avg_pending_hours || 0) + (b.avg_confirmed_hours || 0);
+      return totalA - totalB; // ascending so highest is at top in horizontal bar
+    });
+
     // Adjust container height dynamically based on the number of teams
     const container = canvas.parentElement;
-    const calculatedHeight = Math.max(300, data.length * 40);
+    const calculatedHeight = Math.max(300, sorted.length * 48);
     container.style.height = `${calculatedHeight}px`;
 
     this.charts.cycle = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(d => d.team),
+        labels: sorted.map(d => d.team),
         datasets: [
           {
-            label: 'Wait Confirmed (hrs)',
-            data: data.map(d => Math.round(d.avg_pending_hours || 0)),
-            backgroundColor: '#fb923c'
+            label: 'Wait Review (hrs)',
+            data: sorted.map(d => Math.round(d.avg_confirmed_hours || 0)),
+            backgroundColor: '#3b82f6'
           },
           {
-            label: 'Wait Review (hrs)',
-            data: data.map(d => Math.round(d.avg_confirmed_hours || 0)),
-            backgroundColor: '#3b82f6'
+            label: 'Wait Confirmed (hrs)',
+            data: sorted.map(d => Math.round(d.avg_pending_hours || 0)),
+            backgroundColor: '#fb923c'
           }
         ]
       },
@@ -332,7 +339,16 @@ const TrendsSection = {
         indexAxis: 'y',
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom' }
+          legend: { position: 'bottom' },
+          tooltip: {
+            callbacks: {
+              title: (items) => `Team: ${items[0].label}`,
+              footer: (items) => {
+                const total = items.reduce((s, i) => s + i.parsed.x, 0);
+                return `Total: ${total}h`;
+              }
+            }
+          }
         },
         scales: {
           x: { stacked: true, title: { display: true, text: 'Hours' } },

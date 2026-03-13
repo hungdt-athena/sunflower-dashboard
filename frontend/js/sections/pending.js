@@ -10,40 +10,55 @@ const PendingSection = {
 
     const data = await API.getPending(team);
     
-    function renderRows(list, tb) {
+    // Group items by team, sort by count desc, show worst SLA badge per team
+    function renderTeamRows(list, tb) {
       if (!list || list.length === 0) {
-        tb.innerHTML = '<tr><td colspan="4" class="text-muted text-center">- Clear -</td></tr>';
+        tb.innerHTML = '<tr><td colspan="3" class="text-muted text-center">— Clear —</td></tr>';
         return;
       }
-      
-      tb.innerHTML = list.map(item => {
-        const titleShort = item.title.length > 25 ? item.title.substring(0, 25) + '...' : item.title;
-        const slaLeft = 4 - item.age_hours;
-        
+
+      // Group by team
+      const byTeam = {};
+      list.forEach(item => {
+        const t = item.team || 'uncategorized';
+        if (!byTeam[t]) byTeam[t] = { count: 0, worstAge: 0, priority: item.priority };
+        byTeam[t].count++;
+        if (item.age_hours > byTeam[t].worstAge) {
+          byTeam[t].worstAge = item.age_hours;
+          byTeam[t].priority = item.priority;
+        }
+      });
+
+      // Sort by count desc
+      const sorted = Object.entries(byTeam).sort((a, b) => b[1].count - a[1].count);
+
+      tb.innerHTML = sorted.map(([teamName, info]) => {
+        const slaLeft = 4 - info.worstAge;
         let slaHTML = '';
         if (slaLeft < 0) {
           const overH = Math.round(Math.abs(slaLeft));
-          const txt = overH >= 24 ? Math.round(overH/24)+'d overdue' : overH+'h overdue';
+          const txt = overH >= 24 ? Math.round(overH / 24) + 'd overdue' : overH + 'h overdue';
           slaHTML = `<span class="badge bg-red">${txt}</span>`;
         } else {
           const txt = Math.round(slaLeft) + 'h left';
           slaHTML = `<span class="badge bg-amber">${txt}</span>`;
         }
-        
-        const prioColors = { 'High': 'bg-red text-white', 'Medium': 'bg-secondary', 'Low': 'bg-slate-200 text-slate-600' };
-        const prioClass = prioColors[item.priority] || 'bg-secondary';
-        
+
+        const prioColors = { 'High': 'bg-red', 'Medium': 'bg-secondary', 'Low': 'bg-slate-200 text-slate-600' };
+        const prioClass = prioColors[info.priority] || 'bg-secondary';
+
         return `
-        <tr>
-          <td class="truncate max-w-[120px] text-xs font-medium text-slate-700" title="${item.title.replace(/"/g, '&quot;')}">${titleShort}</td>
-          <td><strong>${item.team}</strong></td>
-          <td>${slaHTML}</td>
-          <td><span class="badge ${prioClass} px-1.5">${item.priority}</span></td>
-        </tr>
-      `}).join('');
+          <tr>
+            <td><strong class="text-slate-800">${teamName}</strong></td>
+            <td><span class="pending-count-badge">${info.count}</span></td>
+            <td>${slaHTML}</td>
+            <td><span class="badge ${prioClass} px-1.5">${info.priority || '—'}</span></td>
+          </tr>
+        `;
+      }).join('');
     }
 
-    renderRows(data.unreviewed, this.elements.unreviewed);
-    renderRows(data.unconfirmed, this.elements.unconfirmed);
+    renderTeamRows(data.unreviewed, this.elements.unreviewed);
+    renderTeamRows(data.unconfirmed, this.elements.unconfirmed);
   }
 };
