@@ -53,7 +53,7 @@ const TrendsSection = {
           const val = dataArr[index];
           if (!val) return;
           const pct = Math.round((val / total) * 100);
-          const labelText = `${chart.data.labels[index]} (${val} - ${pct}%)`;
+          const labelText = `${chart.data.labels[index]}: ${val} (${pct}%)`;
 
           const midAngle = element.startAngle + (element.endAngle - element.startAngle) / 2;
           const radius = element.outerRadius;
@@ -158,7 +158,7 @@ const TrendsSection = {
             callbacks: {
               label: (ctx) => {
                 const realValue = ctx.dataset.rawValues[ctx.dataIndex];
-                return `${ctx.dataset.label}: ${realValue} meeting(s) (${ctx.raw}%)`;
+                return `${ctx.dataset.label}: ${realValue}`;
               }
             }
           }
